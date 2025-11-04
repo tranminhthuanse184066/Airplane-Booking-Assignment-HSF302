@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Airlines - Săn cánh vươn cao</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #d4844e 0%, #e6a870 100%);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-login {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-register {
+            background: white;
+            color: #d4844e;
+            font-weight: bold;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(212, 132, 78, 0.7), rgba(230, 168, 112, 0.7)),
+                        url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200') center/cover;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: -50px auto 50px;
+            position: relative;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group select,
+        .form-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .btn-search {
+            background: #0066cc;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .services {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        
+        .services h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .service-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .service-card h3 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            ✈️ Vietnam Airlines
+        </div>
+        <div class="nav-menu">
+            <a href="/">Lên kế hoạch</a>
+            <a href="/search">Thông tin hành trình</a>
+            <a href="#">Mua vé & Sản phẩm khác</a>
+            <a href="#">Lotusmiles</a>
+        </div>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-login">Đăng nhập</a>
+            <a href="/register" class="btn btn-register">Đăng ký</a>
+        </div>
+    </div>
+    
+    <div class="hero">
+        <h1>VẠN DẶM GẮN KẾT</h1>
+        <p>TẾT GẦN BÊN NHAU</p>
+    </div>
+    
+    <div class="search-box">
+        <form action="/search" method="get" class="search-form">
+            <div class="form-group">
+                <label for="departure">Từ</label>
+                <select id="departure" name="departure" required>
+                    <option value="">-- Chọn sân bay --</option>
+                    <option th:each="airport : ${airports}" 
+                            th:value="${airport.code}" 
+                            th:text="${airport.city + ' (' + airport.code + ')'}"></option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="arrival">Đến</label>
+                <select id="arrival" name="arrival" required>
+                    <option value="">-- Chọn sân bay --</option>
+                    <option th:each="airport : ${airports}" 
+                            th:value="${airport.code}" 
+                            th:text="${airport.city + ' (' + airport.code + ')'}"></option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Ngày đi</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            
+            <button type="submit" class="btn-search">TÌM KIẾM</button>
+        </form>
+    </div>
+    
+    <div class="services">
+        <h2>DỊCH VỤ CỦA CHÚNG TÔI</h2>
+        <div class="service-grid">
+            <div class="service-card">
+                <div class="service-icon">🎒</div>
+                <h3>HÀNH LÝ TRẢ TRƯỚC</h3>
+                <p>Mua thêm hành lý với giá ưu đãi</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">✈️</div>
+                <h3>NÂNG HẠNG & CHỌN CHỖ</h3>
+                <p>Nâng cấp trải nghiệm bay của bạn</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🍽️</div>
+                <h3>MUA SẴM</h3>
+                <p>Đặt trước bữa ăn yêu thích</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🏨</div>
+                <h3>KHÁCH SẠN & TOUR</h3>
+                <p>Đặt khách sạn và tour du lịch</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🛡️</div>
+                <h3>BẢO HIỂM</h3>
+                <p>Bảo vệ chuyến đi của bạn</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">⭐</div>
+                <h3>DỊCH VỤ KHÁC</h3>
+                <p>Khám phá thêm dịch vụ</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2025 Vietnam Airlines. Tất cả quyền được bảo lưu.</p>
+    </div>
+</body>
+</html>

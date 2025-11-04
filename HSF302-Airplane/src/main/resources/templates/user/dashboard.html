@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Vietnam Airlines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #0066cc;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #e3f2fd;
+            color: #0066cc;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .page-title {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .welcome-card h2 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-title {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .btn-view {
+            background: #2196f3;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">✈️ Vietnam Airlines</div>
+        <div class="user-info">
+            <span th:text="${user != null ? user.fullName : 'User'}">User</span>
+            <a href="/logout" class="btn-logout">Đăng xuất</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/user" class="active">Dashboard</a></li>
+                <li><a href="/user/orders">Đơn hàng của tôi</a></li>
+                <li><a href="/user/profile">Thông tin cá nhân</a></li>
+                <li><a href="/">Tìm kiếm chuyến bay</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="welcome-card">
+                <h2>Xin chào, <span th:text="${user != null ? user.fullName : ''}">User</span>!</h2>
+                <p>Chào mừng bạn đến với Vietnam Airlines</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Tổng đơn hàng</div>
+                    <div class="stat-value" th:text="${orders != null ? orders.size() : 0}">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Chuyến bay sắp tới</div>
+                    <div class="stat-value">0</div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Đơn hàng gần đây</h2>
+                </div>
+                
+                <table th:if="${orders != null and !orders.empty}">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Tên khách hàng</th>
+                            <th>Email</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.orderId}">1</td>
+                            <td th:text="${order.fullName}">Nguyễn Văn A</td>
+                            <td th:text="${order.email}">user@example.com</td>
+                            <td th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</td>
+                            <td th:text="${order.status}">PENDING</td>
+                            <td>
+                                <a th:href="@{/user/orders/{id}(id=${order.orderId})}" class="btn-view">Chi tiết</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div th:if="${orders == null or orders.empty}" style="text-align: center; padding: 40px; color: #666;">
+                    <p>Bạn chưa có đơn hàng nào.</p>
+                    <p><a href="/" style="color: #0066cc;">Tìm kiếm chuyến bay ngay</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

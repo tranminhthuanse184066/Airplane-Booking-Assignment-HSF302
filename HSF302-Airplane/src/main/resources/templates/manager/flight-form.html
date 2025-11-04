@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý chuyến bay - Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #d4844e 0%, #e6a870 100%);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #d4844e;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #fff3e0;
+            color: #d4844e;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 800px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn-submit {
+            background: #4caf50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn-cancel {
+            background: #999;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">✈️ Manager Panel - Vietnam Airlines</div>
+        <a href="/logout" class="btn-logout">Đăng xuất</a>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/manager">Dashboard</a></li>
+                <li><a href="/manager/flights" class="active">Quản lý chuyến bay</a></li>
+                <li><a href="/manager/airports">Quản lý sân bay</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h1 th:text="${flight.flightId != null ? 'Chỉnh sửa chuyến bay' : 'Thêm chuyến bay mới'}">Thêm chuyến bay mới</h1>
+            
+            <div class="form-container">
+                <form th:action="${flight.flightId != null ? '/manager/flights/edit/' + flight.flightId : '/manager/flights/create'}" 
+                      method="post" th:object="${flight}">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="departureAirport">Sân bay đi</label>
+                            <select id="departureAirport" th:field="*{departureAirport}" required>
+                                <option value="">-- Chọn sân bay --</option>
+                                <option th:each="airport : ${airports}" 
+                                        th:value="${airport.code}" 
+                                        th:text="${airport.city + ' (' + airport.code + ')'}"></option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="arrivalAirport">Sân bay đến</label>
+                            <select id="arrivalAirport" th:field="*{arrivalAirport}" required>
+                                <option value="">-- Chọn sân bay --</option>
+                                <option th:each="airport : ${airports}" 
+                                        th:value="${airport.code}" 
+                                        th:text="${airport.city + ' (' + airport.code + ')'}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="departureTime">Thời gian khởi hành</label>
+                            <input type="datetime-local" id="departureTime" th:field="*{departureTime}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="arrivalTime">Thời gian đến</label>
+                            <input type="datetime-local" id="arrivalTime" th:field="*{arrivalTime}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price">Giá vé (VNĐ)</label>
+                            <input type="number" id="price" th:field="*{price}" step="1000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="status">Trạng thái</label>
+                            <select id="status" th:field="*{status}" required>
+                                <option value="">-- Chọn trạng thái --</option>
+                                <option th:each="status : ${statuses}" 
+                                        th:value="${status}" 
+                                        th:text="${status}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" class="btn-submit">Lưu</button>
+                        <a href="/manager/flights" class="btn-cancel">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+package main.pojo;
+
+import jakarta.persistence.*;
+import main.enumerators.TicketStatus;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "tickets")
+public class Ticket {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ticket_id")
+    private Integer ticketId;
+    
+    @Column(name = "seat_class", length = 20)
+    private String seatClass;
+    
+    @Column(name = "booking_date")
+    private LocalDateTime bookingDate;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private TicketStatus status;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+    
+    @Column(name = "price", precision = 10, scale = 2)
+    private BigDecimal price;
+    
+    @PrePersist
+    protected void onCreate() {
+        bookingDate = LocalDateTime.now();
+    }
+    
+    // Constructors
+    public Ticket() {
+    }
+    
+    public Ticket(String seatClass, TicketStatus status, BigDecimal price) {
+        this.seatClass = seatClass;
+        this.status = status;
+        this.price = price;
+    }
+    
+    // Getters and Setters
+    public Integer getTicketId() {
+        return ticketId;
+    }
+    
+    public void setTicketId(Integer ticketId) {
+        this.ticketId = ticketId;
+    }
+    
+    public String getSeatClass() {
+        return seatClass;
+    }
+    
+    public void setSeatClass(String seatClass) {
+        this.seatClass = seatClass;
+    }
+    
+    public LocalDateTime getBookingDate() {
+        return bookingDate;
+    }
+    
+    public void setBookingDate(LocalDateTime bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+    
+    public TicketStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(TicketStatus status) {
+        this.status = status;
+    }
+    
+    public Order getOrder() {
+        return order;
+    }
+    
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+    
+    public BigDecimal getPrice() {
+        return price;
+    }
+    
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+}
