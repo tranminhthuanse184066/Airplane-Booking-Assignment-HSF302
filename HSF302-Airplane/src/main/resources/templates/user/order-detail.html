@@ -88,6 +88,13 @@
             font-size: 14px;
         }
         
+        .order-status-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
         .info-section {
             margin: 25px 0;
         }
@@ -182,6 +189,35 @@
         .btn-payment:hover {
             background: #218838;
         }
+        
+        .btn-payment:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .payment-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .payment-info p {
+            margin: 5px 0;
+            color: #856404;
+        }
+        
+        .paid-info {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+            color: #155724;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -236,13 +272,28 @@
                         <span class="status-badge status-pending" th:if="${order.status.name() == 'PENDING'}">Chờ thanh toán</span>
                         <span class="status-badge status-paid" th:if="${order.status.name() == 'PAID'}">Đã thanh toán</span>
                         <span class="status-badge status-cancelled" th:if="${order.status.name() == 'CANCELLED'}">Đã hủy</span>
+                        <span class="status-badge" 
+                              th:classappend="${order.status.name() == 'CONFIRMED'} ? 'status-paid'"
+                              th:if="${order.status.name() == 'CONFIRMED'}">Đã xác nhận</span>
                     </span>
                 </div>
             </div>
             
+            <!-- Thông báo cho đơn hàng chờ thanh toán -->
+            <div class="payment-info" th:if="${order.status.name() == 'PENDING'}">
+                <p><strong>⚠️ Đơn hàng chưa được thanh toán</strong></p>
+                <p>Vui lòng click vào nút "THANH TOÁN NGAY" bên dưới để hoàn tất thanh toán.</p>
+            </div>
+            
+            <!-- Thông báo cho đơn hàng đã thanh toán -->
+            <div class="paid-info" th:if="${order.status.name() == 'PAID'}">
+                <p>✓ Đơn hàng đã được thanh toán thành công!</p>
+            </div>
+            
+            <!-- Form thanh toán chỉ hiện khi đơn hàng chưa thanh toán -->
             <form th:if="${order.status.name() == 'PENDING'}" th:action="@{/booking/payment}" method="post">
                 <input type="hidden" name="orderId" th:value="${order.orderId}">
-                <button type="submit" class="btn-payment">THANH TOÁN NGAY</button>
+                <button type="submit" class="btn-payment">💳 THANH TOÁN NGAY</button>
             </form>
         </div>
     </div>
