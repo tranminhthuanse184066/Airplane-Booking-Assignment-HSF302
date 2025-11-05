@@ -21,7 +21,9 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // Sử dụng NoOpPasswordEncoder để chấp nhận plain text password
+        // LƯU Ý: Không khuyến khích cho môi trường production
+        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
@@ -40,6 +42,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.disable()) // Tạm thời disable CSRF để test dễ hơn
             .authorizeHttpRequests(authz -> authz
                 // Public pages
                 .requestMatchers("/", "/search", "/flight/**", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
@@ -59,20 +62,32 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .successHandler((request, response, authentication) -> {
                     // Redirect based on role
                     String redirectUrl = "/";
+                    System.out.println("✅ Login successful for: " + authentication.getName());
+                    System.out.println("✅ Authorities: " + authentication.getAuthorities());
+                    
                     if (authentication.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
                         redirectUrl = "/admin";
+                        System.out.println("✅ Redirecting to: " + redirectUrl);
                     } else if (authentication.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
                         redirectUrl = "/manager";
+                        System.out.println("✅ Redirecting to: " + redirectUrl);
                     } else if (authentication.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
                         redirectUrl = "/user";
+                        System.out.println("✅ Redirecting to: " + redirectUrl);
                     }
                     response.sendRedirect(redirectUrl);
+                })
+                .failureHandler((request, response, exception) -> {
+                    System.out.println("❌ Login failed: " + exception.getMessage());
+                    response.sendRedirect("/login?error=true");
                 })
                 .permitAll()
             )

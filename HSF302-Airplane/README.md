@@ -85,20 +85,25 @@ Hoặc chạy file `Hsf302AirplaneApplication.java` từ IDE.
 
 ## Tài khoản mặc định
 
-### Admin
-- **Email**: admin@vietnamairlines.com
-- **Password**: admin123
+### Admin (Quản lý tài khoản)
+- **Email**: admin@gmail.com
+- **Password**: admin1
 - **URL**: http://localhost:8080/admin
+- **Chức năng**: CRUD tài khoản người dùng
 
-### Manager
-- **Email**: manager@vietnamairlines.com
-- **Password**: manager123
+### Manager (Quản lý chuyến bay & ghế)
+- **Email**: manager@gmail.com
+- **Password**: manager1
 - **URL**: http://localhost:8080/manager
+- **Chức năng**: CRUD chuyến bay, sân bay, ghế ngồi
 
-### User
-- **Email**: user@example.com
-- **Password**: user123
+### User (Khách hàng)
+- **Email**: user@gmail.com
+- **Password**: user1
 - **URL**: http://localhost:8080/user
+- **Chức năng**: Đặt vé, xem đơn hàng
+
+> ⚠️ **LƯU Ý**: Nếu không đăng nhập được, hãy chạy script `src/main/resources/sql/reset_database.sql` để xóa dữ liệu cũ, sau đó khởi động lại ứng dụng.
 
 ## Chức năng theo role
 

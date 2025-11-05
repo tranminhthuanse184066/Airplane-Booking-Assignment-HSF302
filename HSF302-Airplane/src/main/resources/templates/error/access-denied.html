@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Từ chối truy cập - Vietnam Airlines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #d4844e 0%, #e6a870 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .error-container {
+            background: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            color: #f44336;
+            margin-bottom: 20px;
+        }
+        
+        .error-container h1 {
+            color: #d4844e;
+            margin-bottom: 15px;
+        }
+        
+        .error-container p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .btn-home {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            margin: 5px;
+        }
+        
+        .btn-home:hover {
+            background: #0052a3;
+        }
+        
+        .btn-logout {
+            display: inline-block;
+            background: #f44336;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            margin: 5px;
+        }
+        
+        .btn-logout:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">🚫</div>
+        <h1>Không có quyền truy cập</h1>
+        <p>Xin lỗi! Bạn không có quyền truy cập vào trang này.</p>
+        <p>Vui lòng đăng nhập với tài khoản có quyền phù hợp hoặc liên hệ quản trị viên nếu bạn cho rằng đây là lỗi.</p>
+        
+        <div>
+            <a href="/" class="btn-home">Về trang chủ</a>
+            <a href="/logout" class="btn-logout">Đăng xuất</a>
+        </div>
+    </div>
+</body>
+</html>

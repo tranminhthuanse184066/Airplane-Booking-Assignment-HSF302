@@ -68,35 +68,62 @@ public class DataInitializer implements CommandLineRunner {
 
             // Create Admin
             User admin = new User();
-            admin.setEmail("admin@vietnamairlines.com");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setFullName("Quản trị viên");
-            admin.setPhone("0901234567");
+            admin.setEmail("admin@gmail.com");
+            admin.setPassword("admin");
+            admin.setFullName("Admin Nguyen");
+            admin.setPhone("0901111111");
             admin.setRole(adminRole);
             userRepository.save(admin);
 
-            // Create Manager
-            User manager = new User();
-            manager.setEmail("manager@vietnamairlines.com");
-            manager.setPassword(passwordEncoder.encode("manager123"));
-            manager.setFullName("Nguyễn Văn Manager");
-            manager.setPhone("0902345678");
-            manager.setRole(managerRole);
-            userRepository.save(manager);
+            // Create Manager 1
+            User manager1 = new User();
+            manager1.setEmail("manager1@gmail.com");
+            manager1.setPassword("manager1");
+            manager1.setFullName("Manager Tran");
+            manager1.setPhone("0902222221");
+            manager1.setRole(managerRole);
+            userRepository.save(manager1);
 
-            // Create User
-            User user = new User();
-            user.setEmail("user@example.com");
-            user.setPassword(passwordEncoder.encode("user123"));
-            user.setFullName("Trần Thị User");
-            user.setPhone("0903456789");
-            user.setRole(userRole);
-            userRepository.save(user);
+            // Create Manager 2
+            User manager2 = new User();
+            manager2.setEmail("manager2@gmail.com");
+            manager2.setPassword("manager2");
+            manager2.setFullName("Manager Le");
+            manager2.setPhone("0902222222");
+            manager2.setRole(managerRole);
+            userRepository.save(manager2);
+
+            // Create User 1
+            User user1 = new User();
+            user1.setEmail("user1@gmail.com");
+            user1.setPassword("user1");
+            user1.setFullName("User Pham");
+            user1.setPhone("0903333331");
+            user1.setRole(userRole);
+            userRepository.save(user1);
+
+            // Create User 2
+            User user2 = new User();
+            user2.setEmail("user2@gmail.com");
+            user2.setPassword("user2");
+            user2.setFullName("User Hoang");
+            user2.setPhone("0903333332");
+            user2.setRole(userRole);
+            userRepository.save(user2);
+
+            // Create User 3
+            User user3 = new User();
+            user3.setEmail("user3@gmail.com");
+            user3.setPassword("user3");
+            user3.setFullName("User Vo");
+            user3.setPhone("0903333333");
+            user3.setRole(userRole);
+            userRepository.save(user3);
 
             System.out.println("✅ Users initialized");
-            System.out.println("📧 Admin: admin@vietnamairlines.com / admin123");
-            System.out.println("📧 Manager: manager@vietnamairlines.com / manager123");
-            System.out.println("📧 User: user@example.com / user123");
+            System.out.println("📧 Admin: admin@gmail.com / admin");
+            System.out.println("📧 Manager: manager1@gmail.com / manager1, manager2@gmail.com / manager2");
+            System.out.println("📧 User: user1@gmail.com / user1, user2@gmail.com / user2, user3@gmail.com / user3");
         }
     }
 
@@ -106,97 +133,158 @@ public class DataInitializer implements CommandLineRunner {
             airportRepository.save(new Airport("SGN", "Sân bay Quốc tế Tân Sơn Nhất", "TP. Hồ Chí Minh", "Việt Nam"));
             airportRepository.save(new Airport("DAD", "Sân bay Quốc tế Đà Nẵng", "Đà Nẵng", "Việt Nam"));
             airportRepository.save(new Airport("CXR", "Sân bay Quốc tế Cam Ranh", "Nha Trang", "Việt Nam"));
-            airportRepository.save(new Airport("HPH", "Sân bay Cát Bi", "Hải Phòng", "Việt Nam"));
             airportRepository.save(new Airport("PQC", "Sân bay Quốc tế Phú Quốc", "Phú Quốc", "Việt Nam"));
-            airportRepository.save(new Airport("VCA", "Sân bay Cần Thơ", "Cần Thơ", "Việt Nam"));
-            airportRepository.save(new Airport("VII", "Sân bay Vinh", "Vinh", "Việt Nam"));
-            airportRepository.save(new Airport("HUI", "Sân bay Phú Bài", "Huế", "Việt Nam"));
-            airportRepository.save(new Airport("BMV", "Sân bay Buôn Ma Thuột", "Buôn Ma Thuột", "Việt Nam"));
-            System.out.println("✅ Airports initialized");
+            System.out.println("✅ Airports initialized: 5 airports");
         }
     }
 
     private void initializeFlights() {
         if (flightRepository.count() == 0) {
-            LocalDateTime baseDate = LocalDateTime.now().plusDays(5);
+            LocalDateTime baseDate = LocalDateTime.now().plusDays(1);
 
+            // Chuyến bay HAN - SGN
             flightRepository.save(new Flight("HAN", "SGN", 
-                baseDate.withHour(8).withMinute(0), 
-                baseDate.withHour(10).withMinute(15), 
+                baseDate.withHour(6).withMinute(0), 
+                baseDate.withHour(8).withMinute(15), 
                 new BigDecimal("2500000"), FlightStatus.SCHEDULED));
-
-            flightRepository.save(new Flight("SGN", "HAN", 
+            
+            flightRepository.save(new Flight("HAN", "SGN", 
                 baseDate.withHour(14).withMinute(0), 
                 baseDate.withHour(16).withMinute(15), 
-                new BigDecimal("2500000"), FlightStatus.SCHEDULED));
+                new BigDecimal("2800000"), FlightStatus.SCHEDULED));
 
+            // Chuyến bay SGN - HAN
+            flightRepository.save(new Flight("SGN", "HAN", 
+                baseDate.withHour(7).withMinute(0), 
+                baseDate.withHour(9).withMinute(15), 
+                new BigDecimal("2500000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "HAN", 
+                baseDate.withHour(20).withMinute(0), 
+                baseDate.withHour(22).withMinute(15), 
+                new BigDecimal("2600000"), FlightStatus.SCHEDULED));
+
+            // Chuyến bay HAN - DAD
             flightRepository.save(new Flight("HAN", "DAD", 
                 baseDate.plusDays(1).withHour(9).withMinute(0), 
                 baseDate.plusDays(1).withHour(10).withMinute(30), 
                 new BigDecimal("1800000"), FlightStatus.SCHEDULED));
 
+            // Chuyến bay DAD - HAN
             flightRepository.save(new Flight("DAD", "HAN", 
-                baseDate.plusDays(1).withHour(15).withMinute(0), 
-                baseDate.plusDays(1).withHour(16).withMinute(30), 
-                new BigDecimal("1800000"), FlightStatus.SCHEDULED));
+                baseDate.plusDays(1).withHour(19).withMinute(0), 
+                baseDate.plusDays(1).withHour(20).withMinute(30), 
+                new BigDecimal("1700000"), FlightStatus.SCHEDULED));
 
+            // Chuyến bay SGN - DAD
+            flightRepository.save(new Flight("SGN", "DAD", 
+                baseDate.plusDays(2).withHour(8).withMinute(0), 
+                baseDate.plusDays(2).withHour(9).withMinute(30), 
+                new BigDecimal("1600000"), FlightStatus.SCHEDULED));
+            
+            // Chuyến bay DAD - SGN
+            flightRepository.save(new Flight("DAD", "SGN", 
+                baseDate.plusDays(2).withHour(15).withMinute(0), 
+                baseDate.plusDays(2).withHour(16).withMinute(30), 
+                new BigDecimal("1600000"), FlightStatus.SCHEDULED));
+
+            // Chuyến bay SGN - PQC
             flightRepository.save(new Flight("SGN", "PQC", 
-                baseDate.plusDays(2).withHour(7).withMinute(30), 
-                baseDate.plusDays(2).withHour(8).withMinute(30), 
+                baseDate.plusDays(3).withHour(7).withMinute(30), 
+                baseDate.plusDays(3).withHour(8).withMinute(30), 
                 new BigDecimal("1500000"), FlightStatus.SCHEDULED));
-
+            
+            // Chuyến bay PQC - SGN
             flightRepository.save(new Flight("PQC", "SGN", 
-                baseDate.plusDays(2).withHour(16).withMinute(0), 
-                baseDate.plusDays(2).withHour(17).withMinute(0), 
-                new BigDecimal("1500000"), FlightStatus.SCHEDULED));
+                baseDate.plusDays(3).withHour(17).withMinute(30), 
+                baseDate.plusDays(3).withHour(18).withMinute(30), 
+                new BigDecimal("1700000"), FlightStatus.SCHEDULED));
 
+            // Chuyến bay HAN - CXR
             flightRepository.save(new Flight("HAN", "CXR", 
-                baseDate.plusDays(3).withHour(10).withMinute(0), 
-                baseDate.plusDays(3).withHour(12).withMinute(0), 
+                baseDate.plusDays(4).withHour(10).withMinute(0), 
+                baseDate.plusDays(4).withHour(12).withMinute(0), 
                 new BigDecimal("2200000"), FlightStatus.SCHEDULED));
 
+            // Chuyến bay CXR - HAN
             flightRepository.save(new Flight("CXR", "HAN", 
-                baseDate.plusDays(3).withHour(18).withMinute(0), 
-                baseDate.plusDays(3).withHour(20).withMinute(0), 
+                baseDate.plusDays(4).withHour(18).withMinute(0), 
+                baseDate.plusDays(4).withHour(20).withMinute(0), 
                 new BigDecimal("2200000"), FlightStatus.SCHEDULED));
 
-            flightRepository.save(new Flight("SGN", "VCA", 
-                baseDate.plusDays(4).withHour(11).withMinute(0), 
-                baseDate.plusDays(4).withHour(11).withMinute(50), 
-                new BigDecimal("1200000"), FlightStatus.SCHEDULED));
-
-            flightRepository.save(new Flight("HAN", "HPH", 
-                baseDate.plusDays(5).withHour(6).withMinute(0), 
-                baseDate.plusDays(5).withHour(6).withMinute(45), 
-                new BigDecimal("800000"), FlightStatus.SCHEDULED));
-
-            System.out.println("✅ Flights initialized");
+            System.out.println("✅ Flights initialized: 12 flights");
         }
     }
 
     private void initializeSeats() {
         if (seatRepository.count() == 0) {
-            // Business Class seats (rows 1-5)
-            String[] businessRows = {"1", "2", "3", "4", "5"};
-            String[] businessCols = {"A", "B", "C", "D"};
+            // Ghế hạng Business - Hàng 1
+            seatRepository.save(new Seat("1A"));
+            seatRepository.save(new Seat("1B"));
+            seatRepository.save(new Seat("1C"));
+            seatRepository.save(new Seat("1D"));
             
-            for (String row : businessRows) {
-                for (String col : businessCols) {
-                    seatRepository.save(new Seat(row + col));
-                }
-            }
+            // Ghế hạng Business - Hàng 2
+            seatRepository.save(new Seat("2A"));
+            seatRepository.save(new Seat("2B"));
+            seatRepository.save(new Seat("2C"));
+            seatRepository.save(new Seat("2D"));
 
-            // Economy Class seats (rows 10-25)
-            String[] economyRows = {"10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"};
-            String[] economyCols = {"A", "B", "C", "D", "E", "F"};
-            
-            for (String row : economyRows) {
-                for (String col : economyCols) {
-                    seatRepository.save(new Seat(row + col));
-                }
-            }
+            // Ghế hạng Business - Hàng 3
+            seatRepository.save(new Seat("3A"));
+            seatRepository.save(new Seat("3B"));
+            seatRepository.save(new Seat("3C"));
+            seatRepository.save(new Seat("3D"));
 
-            System.out.println("✅ Seats initialized");
+            // Ghế hạng Economy - Hàng 10
+            seatRepository.save(new Seat("10A"));
+            seatRepository.save(new Seat("10B"));
+            seatRepository.save(new Seat("10C"));
+            seatRepository.save(new Seat("10D"));
+            seatRepository.save(new Seat("10E"));
+            seatRepository.save(new Seat("10F"));
+
+            // Ghế hạng Economy - Hàng 11
+            seatRepository.save(new Seat("11A"));
+            seatRepository.save(new Seat("11B"));
+            seatRepository.save(new Seat("11C"));
+            seatRepository.save(new Seat("11D"));
+            seatRepository.save(new Seat("11E"));
+            seatRepository.save(new Seat("11F"));
+
+            // Ghế hạng Economy - Hàng 12
+            seatRepository.save(new Seat("12A"));
+            seatRepository.save(new Seat("12B"));
+            seatRepository.save(new Seat("12C"));
+            seatRepository.save(new Seat("12D"));
+            seatRepository.save(new Seat("12E"));
+            seatRepository.save(new Seat("12F"));
+
+            // Ghế hạng Economy - Hàng 13
+            seatRepository.save(new Seat("13A"));
+            seatRepository.save(new Seat("13B"));
+            seatRepository.save(new Seat("13C"));
+            seatRepository.save(new Seat("13D"));
+            seatRepository.save(new Seat("13E"));
+            seatRepository.save(new Seat("13F"));
+
+            // Ghế hạng Economy - Hàng 14
+            seatRepository.save(new Seat("14A"));
+            seatRepository.save(new Seat("14B"));
+            seatRepository.save(new Seat("14C"));
+            seatRepository.save(new Seat("14D"));
+            seatRepository.save(new Seat("14E"));
+            seatRepository.save(new Seat("14F"));
+
+            // Ghế hạng Economy - Hàng 15
+            seatRepository.save(new Seat("15A"));
+            seatRepository.save(new Seat("15B"));
+            seatRepository.save(new Seat("15C"));
+            seatRepository.save(new Seat("15D"));
+            seatRepository.save(new Seat("15E"));
+            seatRepository.save(new Seat("15F"));
+
+            System.out.println("✅ Seats initialized: 48 seats (12 Business + 36 Economy)");
         }
     }
 }

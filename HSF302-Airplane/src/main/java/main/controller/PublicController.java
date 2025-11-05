@@ -66,4 +66,9 @@ public class PublicController {
     public String register() {
         return "auth/register";
     }
+
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "error/access-denied";
+    }
 }

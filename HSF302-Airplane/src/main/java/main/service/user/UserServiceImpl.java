@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Không mã hóa password - lưu trực tiếp plain text
         return userRepository.save(user);
     }
 
@@ -37,7 +37,8 @@ public class UserServiceImpl implements UserService {
         existingUser.setPhone(user.getPhone());
         
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            // Không mã hóa password - lưu trực tiếp plain text
+            existingUser.setPassword(user.getPassword());
         }
         
         if (user.getRole() != null) {
