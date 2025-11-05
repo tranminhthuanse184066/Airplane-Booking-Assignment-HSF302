@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết đơn hàng - Vietnam Airlines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #0066cc;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .btn-back {
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        
+        .btn-back:hover {
+            text-decoration: underline;
+        }
+        
+        .order-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .order-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .order-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .order-id {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .info-section {
+            margin: 25px 0;
+        }
+        
+        .section-title {
+            color: #0066cc;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .price-total {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .price-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn-payment {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        
+        .btn-payment:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">✈️ Vietnam Airlines</div>
+        <div class="user-info">
+            <span>User</span>
+            <a href="/logout" class="btn-logout">Đăng xuất</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <a href="/user" class="btn-back">← Quay lại Dashboard</a>
+        
+        <div class="order-card">
+            <div class="order-header">
+                <h1>Chi tiết đơn hàng</h1>
+                <div class="order-id">Mã đơn hàng: <strong th:text="'#' + ${order.orderId}">001</strong></div>
+            </div>
+            
+            <div class="info-section">
+                <div class="section-title">Thông tin khách hàng</div>
+                <div class="info-row">
+                    <span class="info-label">Họ và tên:</span>
+                    <span class="info-value" th:text="${order.fullName}">Nguyễn Văn A</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value" th:text="${order.email}">email@example.com</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Số điện thoại:</span>
+                    <span class="info-value" th:text="${order.phone}">0123456789</span>
+                </div>
+            </div>
+            
+            <div class="price-total">
+                <div class="price-row">
+                    <span>Tổng giá trị:</span>
+                    <span th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</span>
+                </div>
+                <div class="price-total-row">
+                    <span>Tổng thanh toán:</span>
+                    <span th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-row">
+                    <span class="info-label">Trạng thái:</span>
+                    <span class="info-value">
+                        <span class="status-badge status-pending" th:if="${order.status.name() == 'PENDING'}">Chờ thanh toán</span>
+                        <span class="status-badge status-paid" th:if="${order.status.name() == 'PAID'}">Đã thanh toán</span>
+                        <span class="status-badge status-cancelled" th:if="${order.status.name() == 'CANCELLED'}">Đã hủy</span>
+                    </span>
+                </div>
+            </div>
+            
+            <form th:if="${order.status.name() == 'PENDING'}" th:action="@{/booking/payment}" method="post">
+                <input type="hidden" name="orderId" th:value="${order.orderId}">
+                <button type="submit" class="btn-payment">THANH TOÁN NGAY</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

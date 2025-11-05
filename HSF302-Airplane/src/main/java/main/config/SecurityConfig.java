@@ -56,6 +56,9 @@ public class SecurityConfig {
                 // User pages - only USER role
                 .requestMatchers("/user/**").hasRole("USER")
                 
+                // Booking pages - only USER role
+                .requestMatchers("/booking/**").hasRole("USER")
+                
                 // All other requests need authentication
                 .anyRequest().authenticated()
             )

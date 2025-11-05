@@ -167,6 +167,22 @@
             border-radius: 3px;
             text-decoration: none;
         }
+        
+        .success-alert {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .success-alert .icon {
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -189,6 +205,11 @@
         </div>
         
         <div class="content">
+            <div class="success-alert" th:if="${successMessage}">
+                <span class="icon">✓</span>
+                <span th:text="${successMessage}">Thanh toán thành công!</span>
+            </div>
+            
             <div class="welcome-card">
                 <h2>Xin chào, <span th:text="${user != null ? user.fullName : ''}">User</span>!</h2>
                 <p>Chào mừng bạn đến với Vietnam Airlines</p>

@@ -23,7 +23,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public String userDashboard(Authentication authentication, Model model) {
+    public String userDashboard(Authentication authentication, Model model,
+                                @RequestParam(required = false) String paymentSuccess) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -31,6 +32,11 @@ public class UserController {
         List<Order> orders = orderService.getOrdersByUserId(user.getUserId());
         model.addAttribute("user", user);
         model.addAttribute("orders", orders);
+        
+        if ("true".equals(paymentSuccess)) {
+            model.addAttribute("successMessage", "Thanh toán thành công!");
+        }
+        
         return "user/dashboard";
     }
 

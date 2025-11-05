@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết chuyến bay - Vietnam Airlines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #d4844e 0%, #e6a870 100%);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        
+        .btn-login {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-register, .btn-logout {
+            background: white;
+            color: #d4844e;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-name {
+            font-weight: 500;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .flight-detail-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .flight-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .flight-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .flight-route-detail {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .route-point {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .airport-code {
+            font-size: 36px;
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        
+        .time {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+        
+        .date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .route-arrow {
+            font-size: 32px;
+            color: #999;
+            margin: 0 20px;
+        }
+        
+        .flight-info-section {
+            margin: 20px 0;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .price-section {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .price-label {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .price-amount {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .booking-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .booking-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        
+        .btn-book-now {
+            width: 100%;
+            background: #0066cc;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        
+        .btn-book-now:hover {
+            background: #0052a3;
+        }
+        
+        .btn-back {
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        
+        .btn-back:hover {
+            text-decoration: underline;
+        }
+        
+        .login-message {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .login-message p {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">✈️ Vietnam Airlines</div>
+        <div class="header-nav">
+            <a href="/" style="color: white; text-decoration: none;">Trang chủ</a>
+            
+            <div sec:authorize="!isAuthenticated()" style="display: flex; gap: 15px;">
+                <a href="/login" class="btn btn-login">Đăng nhập</a>
+                <a href="/register" class="btn btn-register">Đăng ký</a>
+            </div>
+            
+            <div class="user-info" sec:authorize="isAuthenticated()">
+                <span class="user-name" sec:authentication="name">User</span>
+                <a href="/user" class="btn btn-register" style="text-decoration: none;">Dashboard</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-logout">Đăng xuất</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <a href="/search" class="btn-back">← Quay lại tìm kiếm</a>
+        
+        <div class="flight-detail-card">
+            <div class="flight-header">
+                <h1>Chi tiết chuyến bay</h1>
+            </div>
+            
+            <div class="flight-route-detail">
+                <div class="route-point">
+                    <div class="airport-code" th:text="${flight.departureAirport}">HAN</div>
+                    <div class="time" th:text="${#temporals.format(flight.departureTime, 'HH:mm')}">08:00</div>
+                    <div class="date" th:text="${#temporals.format(flight.departureTime, 'dd/MM/yyyy')}">07/11/2025</div>
+                </div>
+                
+                <div class="route-arrow">→</div>
+                
+                <div class="route-point">
+                    <div class="airport-code" th:text="${flight.arrivalAirport}">SGN</div>
+                    <div class="time" th:text="${#temporals.format(flight.arrivalTime, 'HH:mm')}">10:00</div>
+                    <div class="date" th:text="${#temporals.format(flight.arrivalTime, 'dd/MM/yyyy')}">07/11/2025</div>
+                </div>
+            </div>
+            
+            <div class="flight-info-section">
+                <div class="info-row">
+                    <span class="info-label">Mã chuyến bay:</span>
+                    <span class="info-value" th:text="'VN' + ${flight.flightId}">VN001</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Trạng thái:</span>
+                    <span class="info-value" th:text="${flight.status}">SCHEDULED</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Thời gian bay:</span>
+                    <span class="info-value" th:text="${T(java.time.Duration).between(flight.departureTime, flight.arrivalTime).toHours()} + ' giờ ' + ${T(java.time.Duration).between(flight.departureTime, flight.arrivalTime).toMinutesPart()} + ' phút'">2 giờ 10 phút</span>
+                </div>
+            </div>
+            
+            <div class="price-section">
+                <div class="price-label">Giá vé</div>
+                <div class="price-amount" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</div>
+            </div>
+        </div>
+        
+        <!-- Booking form - only for authenticated users -->
+        <div sec:authorize="isAuthenticated()">
+            <div class="booking-form">
+                <h2>Thông tin đặt vé</h2>
+                <form th:action="@{/booking/create}" method="post">
+                    <input type="hidden" name="flightId" th:value="${flight.flightId}">
+                    
+                    <div class="form-group">
+                        <label for="fullName">Họ và tên: *</label>
+                        <input type="text" id="fullName" name="fullName" required 
+                               placeholder="Nhập họ và tên đầy đủ">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email: *</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="example@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại: *</label>
+                        <input type="tel" id="phone" name="phone" required 
+                               placeholder="0912345678" pattern="[0-9]{10}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="seatClass">Hạng ghế: *</label>
+                        <select id="seatClass" name="seatClass" required>
+                            <option value="Economy">Phổ thông - Economy</option>
+                            <option value="Business">Thương gia - Business</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-book-now">ĐẶT VÉ NGAY</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Login message for non-authenticated users -->
+        <div class="login-message" sec:authorize="!isAuthenticated()">
+            <p>Vui lòng đăng nhập để đặt vé</p>
+            <a href="/login" class="btn" style="background: #0066cc; color: white; text-decoration: none;">Đăng nhập</a>
+        </div>
+    </div>
+</body>
+</html>
