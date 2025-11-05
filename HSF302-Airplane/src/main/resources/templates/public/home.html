@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,6 +69,22 @@
             background: white;
             color: #d4844e;
             font-weight: bold;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #d4844e;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-name {
+            font-weight: 500;
         }
         
         .hero {
@@ -195,9 +212,16 @@
             <a href="#">Mua vé & Sản phẩm khác</a>
             <a href="#">Lotusmiles</a>
         </div>
-        <div class="auth-buttons">
+        <div class="auth-buttons" sec:authorize="!isAuthenticated()">
             <a href="/login" class="btn btn-login">Đăng nhập</a>
             <a href="/register" class="btn btn-register">Đăng ký</a>
+        </div>
+        <div class="user-info" sec:authorize="isAuthenticated()">
+            <span class="user-name" sec:authentication="name">User</span>
+            <a href="/user" class="btn btn-register" style="text-decoration: none;">Dashboard</a>
+            <form action="/logout" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-logout">Đăng xuất</button>
+            </form>
         </div>
     </div>
     

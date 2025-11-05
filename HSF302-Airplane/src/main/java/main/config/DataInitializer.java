@@ -129,11 +129,11 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeAirports() {
         if (airportRepository.count() == 0) {
-            airportRepository.save(new Airport("HAN", "Sân bay Quốc tế Nội Bài", "Hà Nội", "Việt Nam"));
-            airportRepository.save(new Airport("SGN", "Sân bay Quốc tế Tân Sơn Nhất", "TP. Hồ Chí Minh", "Việt Nam"));
-            airportRepository.save(new Airport("DAD", "Sân bay Quốc tế Đà Nẵng", "Đà Nẵng", "Việt Nam"));
-            airportRepository.save(new Airport("CXR", "Sân bay Quốc tế Cam Ranh", "Nha Trang", "Việt Nam"));
-            airportRepository.save(new Airport("PQC", "Sân bay Quốc tế Phú Quốc", "Phú Quốc", "Việt Nam"));
+            airportRepository.save(new Airport("HAN", "Sân bay Quốc tế Nội Bài", "Hà Nội (HAN)", "Việt Nam"));
+            airportRepository.save(new Airport("SGN", "Sân bay Quốc tế Tân Sơn Nhất", "TP Hồ Chí Minh (SGN)", "Việt Nam"));
+            airportRepository.save(new Airport("DAD", "Sân bay Quốc tế Đà Nẵng", "Đà Nẵng (DAD)", "Việt Nam"));
+            airportRepository.save(new Airport("CXR", "Sân bay Quốc tế Cam Ranh", "Nha Trang (CXR)", "Việt Nam"));
+            airportRepository.save(new Airport("PQC", "Sân bay Quốc tế Phú Quốc", "Phú Quốc (PQC)", "Việt Nam"));
             System.out.println("✅ Airports initialized: 5 airports");
         }
     }
@@ -142,77 +142,314 @@ public class DataInitializer implements CommandLineRunner {
         if (flightRepository.count() == 0) {
             LocalDateTime baseDate = LocalDateTime.now().plusDays(1);
 
-            // Chuyến bay HAN - SGN
+            // ========== HAN - SGN (Hà Nội - TP. Hồ Chí Minh) ==========
+            // Ngày 1
             flightRepository.save(new Flight("HAN", "SGN", 
                 baseDate.withHour(6).withMinute(0), 
                 baseDate.withHour(8).withMinute(15), 
                 new BigDecimal("2500000"), FlightStatus.SCHEDULED));
             
             flightRepository.save(new Flight("HAN", "SGN", 
+                baseDate.withHour(9).withMinute(30), 
+                baseDate.withHour(11).withMinute(45), 
+                new BigDecimal("2700000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "SGN", 
                 baseDate.withHour(14).withMinute(0), 
                 baseDate.withHour(16).withMinute(15), 
                 new BigDecimal("2800000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "SGN", 
+                baseDate.withHour(18).withMinute(30), 
+                baseDate.withHour(20).withMinute(45), 
+                new BigDecimal("2600000"), FlightStatus.SCHEDULED));
 
-            // Chuyến bay SGN - HAN
+            // ========== SGN - HAN (TP. Hồ Chí Minh - Hà Nội) ==========
             flightRepository.save(new Flight("SGN", "HAN", 
                 baseDate.withHour(7).withMinute(0), 
                 baseDate.withHour(9).withMinute(15), 
                 new BigDecimal("2500000"), FlightStatus.SCHEDULED));
             
             flightRepository.save(new Flight("SGN", "HAN", 
+                baseDate.withHour(12).withMinute(0), 
+                baseDate.withHour(14).withMinute(15), 
+                new BigDecimal("2700000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "HAN", 
+                baseDate.withHour(16).withMinute(30), 
+                baseDate.withHour(18).withMinute(45), 
+                new BigDecimal("2650000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "HAN", 
                 baseDate.withHour(20).withMinute(0), 
                 baseDate.withHour(22).withMinute(15), 
                 new BigDecimal("2600000"), FlightStatus.SCHEDULED));
 
-            // Chuyến bay HAN - DAD
+            // ========== HAN - DAD (Hà Nội - Đà Nẵng) ==========
             flightRepository.save(new Flight("HAN", "DAD", 
-                baseDate.plusDays(1).withHour(9).withMinute(0), 
-                baseDate.plusDays(1).withHour(10).withMinute(30), 
-                new BigDecimal("1800000"), FlightStatus.SCHEDULED));
-
-            // Chuyến bay DAD - HAN
-            flightRepository.save(new Flight("DAD", "HAN", 
-                baseDate.plusDays(1).withHour(19).withMinute(0), 
-                baseDate.plusDays(1).withHour(20).withMinute(30), 
-                new BigDecimal("1700000"), FlightStatus.SCHEDULED));
-
-            // Chuyến bay SGN - DAD
-            flightRepository.save(new Flight("SGN", "DAD", 
-                baseDate.plusDays(2).withHour(8).withMinute(0), 
-                baseDate.plusDays(2).withHour(9).withMinute(30), 
+                baseDate.withHour(6).withMinute(30), 
+                baseDate.withHour(8).withMinute(0), 
                 new BigDecimal("1600000"), FlightStatus.SCHEDULED));
             
-            // Chuyến bay DAD - SGN
-            flightRepository.save(new Flight("DAD", "SGN", 
-                baseDate.plusDays(2).withHour(15).withMinute(0), 
-                baseDate.plusDays(2).withHour(16).withMinute(30), 
-                new BigDecimal("1600000"), FlightStatus.SCHEDULED));
+            flightRepository.save(new Flight("HAN", "DAD", 
+                baseDate.withHour(9).withMinute(0), 
+                baseDate.withHour(10).withMinute(30), 
+                new BigDecimal("1800000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "DAD", 
+                baseDate.withHour(13).withMinute(0), 
+                baseDate.withHour(14).withMinute(30), 
+                new BigDecimal("1850000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "DAD", 
+                baseDate.withHour(17).withMinute(0), 
+                baseDate.withHour(18).withMinute(30), 
+                new BigDecimal("1750000"), FlightStatus.SCHEDULED));
 
-            // Chuyến bay SGN - PQC
-            flightRepository.save(new Flight("SGN", "PQC", 
-                baseDate.plusDays(3).withHour(7).withMinute(30), 
-                baseDate.plusDays(3).withHour(8).withMinute(30), 
+            // ========== DAD - HAN (Đà Nẵng - Hà Nội) ==========
+            flightRepository.save(new Flight("DAD", "HAN", 
+                baseDate.withHour(8).withMinute(30), 
+                baseDate.withHour(10).withMinute(0), 
+                new BigDecimal("1650000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "HAN", 
+                baseDate.withHour(12).withMinute(30), 
+                baseDate.withHour(14).withMinute(0), 
+                new BigDecimal("1750000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "HAN", 
+                baseDate.withHour(15).withMinute(30), 
+                baseDate.withHour(17).withMinute(0), 
+                new BigDecimal("1800000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "HAN", 
+                baseDate.withHour(19).withMinute(0), 
+                baseDate.withHour(20).withMinute(30), 
+                new BigDecimal("1700000"), FlightStatus.SCHEDULED));
+
+            // ========== SGN - DAD (TP. Hồ Chí Minh - Đà Nẵng) ==========
+            flightRepository.save(new Flight("SGN", "DAD", 
+                baseDate.withHour(6).withMinute(0), 
+                baseDate.withHour(7).withMinute(30), 
+                new BigDecimal("1400000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "DAD", 
+                baseDate.withHour(8).withMinute(0), 
+                baseDate.withHour(9).withMinute(30), 
+                new BigDecimal("1600000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "DAD", 
+                baseDate.withHour(11).withMinute(0), 
+                baseDate.withHour(12).withMinute(30), 
+                new BigDecimal("1550000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "DAD", 
+                baseDate.withHour(16).withMinute(0), 
+                baseDate.withHour(17).withMinute(30), 
                 new BigDecimal("1500000"), FlightStatus.SCHEDULED));
             
-            // Chuyến bay PQC - SGN
+            // ========== DAD - SGN (Đà Nẵng - TP. Hồ Chí Minh) ==========
+            flightRepository.save(new Flight("DAD", "SGN", 
+                baseDate.withHour(7).withMinute(30), 
+                baseDate.withHour(9).withMinute(0), 
+                new BigDecimal("1450000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "SGN", 
+                baseDate.withHour(10).withMinute(30), 
+                baseDate.withHour(12).withMinute(0), 
+                new BigDecimal("1550000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "SGN", 
+                baseDate.withHour(15).withMinute(0), 
+                baseDate.withHour(16).withMinute(30), 
+                new BigDecimal("1600000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "SGN", 
+                baseDate.withHour(19).withMinute(30), 
+                baseDate.withHour(21).withMinute(0), 
+                new BigDecimal("1500000"), FlightStatus.SCHEDULED));
+
+            // ========== SGN - PQC (TP. Hồ Chí Minh - Phú Quốc) ==========
+            flightRepository.save(new Flight("SGN", "PQC", 
+                baseDate.withHour(6).withMinute(0), 
+                baseDate.withHour(7).withMinute(0), 
+                new BigDecimal("1300000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "PQC", 
+                baseDate.withHour(7).withMinute(30), 
+                baseDate.withHour(8).withMinute(30), 
+                new BigDecimal("1500000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "PQC", 
+                baseDate.withHour(10).withMinute(0), 
+                baseDate.withHour(11).withMinute(0), 
+                new BigDecimal("1450000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "PQC", 
+                baseDate.withHour(14).withMinute(30), 
+                baseDate.withHour(15).withMinute(30), 
+                new BigDecimal("1550000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "PQC", 
+                baseDate.withHour(19).withMinute(0), 
+                baseDate.withHour(20).withMinute(0), 
+                new BigDecimal("1400000"), FlightStatus.SCHEDULED));
+            
+            // ========== PQC - SGN (Phú Quốc - TP. Hồ Chí Minh) ==========
             flightRepository.save(new Flight("PQC", "SGN", 
-                baseDate.plusDays(3).withHour(17).withMinute(30), 
-                baseDate.plusDays(3).withHour(18).withMinute(30), 
+                baseDate.withHour(7).withMinute(30), 
+                baseDate.withHour(8).withMinute(30), 
+                new BigDecimal("1350000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("PQC", "SGN", 
+                baseDate.withHour(11).withMinute(30), 
+                baseDate.withHour(12).withMinute(30), 
+                new BigDecimal("1500000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("PQC", "SGN", 
+                baseDate.withHour(15).withMinute(0), 
+                baseDate.withHour(16).withMinute(0), 
+                new BigDecimal("1600000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("PQC", "SGN", 
+                baseDate.withHour(17).withMinute(30), 
+                baseDate.withHour(18).withMinute(30), 
                 new BigDecimal("1700000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("PQC", "SGN", 
+                baseDate.withHour(20).withMinute(30), 
+                baseDate.withHour(21).withMinute(30), 
+                new BigDecimal("1450000"), FlightStatus.SCHEDULED));
 
-            // Chuyến bay HAN - CXR
+            // ========== HAN - CXR (Hà Nội - Nha Trang) ==========
             flightRepository.save(new Flight("HAN", "CXR", 
-                baseDate.plusDays(4).withHour(10).withMinute(0), 
-                baseDate.plusDays(4).withHour(12).withMinute(0), 
+                baseDate.withHour(6).withMinute(30), 
+                baseDate.withHour(8).withMinute(30), 
+                new BigDecimal("2000000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "CXR", 
+                baseDate.withHour(10).withMinute(0), 
+                baseDate.withHour(12).withMinute(0), 
                 new BigDecimal("2200000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "CXR", 
+                baseDate.withHour(14).withMinute(30), 
+                baseDate.withHour(16).withMinute(30), 
+                new BigDecimal("2300000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "CXR", 
+                baseDate.withHour(18).withMinute(0), 
+                baseDate.withHour(20).withMinute(0), 
+                new BigDecimal("2100000"), FlightStatus.SCHEDULED));
 
-            // Chuyến bay CXR - HAN
+            // ========== CXR - HAN (Nha Trang - Hà Nội) ==========
             flightRepository.save(new Flight("CXR", "HAN", 
-                baseDate.plusDays(4).withHour(18).withMinute(0), 
-                baseDate.plusDays(4).withHour(20).withMinute(0), 
+                baseDate.withHour(8).withMinute(30), 
+                baseDate.withHour(10).withMinute(30), 
+                new BigDecimal("2050000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "HAN", 
+                baseDate.withHour(12).withMinute(30), 
+                baseDate.withHour(14).withMinute(30), 
+                new BigDecimal("2250000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "HAN", 
+                baseDate.withHour(16).withMinute(0), 
+                baseDate.withHour(18).withMinute(0), 
+                new BigDecimal("2300000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "HAN", 
+                baseDate.withHour(18).withMinute(0), 
+                baseDate.withHour(20).withMinute(0), 
                 new BigDecimal("2200000"), FlightStatus.SCHEDULED));
 
-            System.out.println("✅ Flights initialized: 12 flights");
+            // ========== SGN - CXR (TP. Hồ Chí Minh - Nha Trang) ==========
+            flightRepository.save(new Flight("SGN", "CXR", 
+                baseDate.withHour(6).withMinute(0), 
+                baseDate.withHour(7).withMinute(0), 
+                new BigDecimal("1200000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "CXR", 
+                baseDate.withHour(10).withMinute(0), 
+                baseDate.withHour(11).withMinute(0), 
+                new BigDecimal("1400000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "CXR", 
+                baseDate.withHour(14).withMinute(0), 
+                baseDate.withHour(15).withMinute(0), 
+                new BigDecimal("1350000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("SGN", "CXR", 
+                baseDate.withHour(18).withMinute(30), 
+                baseDate.withHour(19).withMinute(30), 
+                new BigDecimal("1300000"), FlightStatus.SCHEDULED));
+
+            // ========== CXR - SGN (Nha Trang - TP. Hồ Chí Minh) ==========
+            flightRepository.save(new Flight("CXR", "SGN", 
+                baseDate.withHour(7).withMinute(30), 
+                baseDate.withHour(8).withMinute(30), 
+                new BigDecimal("1250000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "SGN", 
+                baseDate.withHour(11).withMinute(30), 
+                baseDate.withHour(12).withMinute(30), 
+                new BigDecimal("1400000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "SGN", 
+                baseDate.withHour(15).withMinute(30), 
+                baseDate.withHour(16).withMinute(30), 
+                new BigDecimal("1380000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "SGN", 
+                baseDate.withHour(20).withMinute(0), 
+                baseDate.withHour(21).withMinute(0), 
+                new BigDecimal("1300000"), FlightStatus.SCHEDULED));
+
+            // ========== HAN - PQC (Hà Nội - Phú Quốc) ==========
+            flightRepository.save(new Flight("HAN", "PQC", 
+                baseDate.withHour(7).withMinute(0), 
+                baseDate.withHour(9).withMinute(30), 
+                new BigDecimal("2800000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("HAN", "PQC", 
+                baseDate.withHour(13).withMinute(0), 
+                baseDate.withHour(15).withMinute(30), 
+                new BigDecimal("3000000"), FlightStatus.SCHEDULED));
+
+            // ========== PQC - HAN (Phú Quốc - Hà Nội) ==========
+            flightRepository.save(new Flight("PQC", "HAN", 
+                baseDate.withHour(10).withMinute(0), 
+                baseDate.withHour(12).withMinute(30), 
+                new BigDecimal("2850000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("PQC", "HAN", 
+                baseDate.withHour(16).withMinute(0), 
+                baseDate.withHour(18).withMinute(30), 
+                new BigDecimal("3000000"), FlightStatus.SCHEDULED));
+
+            // ========== DAD - CXR (Đà Nẵng - Nha Trang) ==========
+            flightRepository.save(new Flight("DAD", "CXR", 
+                baseDate.withHour(8).withMinute(0), 
+                baseDate.withHour(9).withMinute(0), 
+                new BigDecimal("1100000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("DAD", "CXR", 
+                baseDate.withHour(15).withMinute(0), 
+                baseDate.withHour(16).withMinute(0), 
+                new BigDecimal("1200000"), FlightStatus.SCHEDULED));
+
+            // ========== CXR - DAD (Nha Trang - Đà Nẵng) ==========
+            flightRepository.save(new Flight("CXR", "DAD", 
+                baseDate.withHour(10).withMinute(0), 
+                baseDate.withHour(11).withMinute(0), 
+                new BigDecimal("1100000"), FlightStatus.SCHEDULED));
+            
+            flightRepository.save(new Flight("CXR", "DAD", 
+                baseDate.withHour(17).withMinute(0), 
+                baseDate.withHour(18).withMinute(0), 
+                new BigDecimal("1200000"), FlightStatus.SCHEDULED));
+
+            System.out.println("✅ Flights initialized: 60 flights covering all major routes");
         }
     }
 

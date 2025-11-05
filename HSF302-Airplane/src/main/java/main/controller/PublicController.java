@@ -6,6 +6,7 @@ import main.service.category.AirportService;
 import main.service.produce.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,12 @@ public class PublicController {
     private AirportService airportService;
 
     @GetMapping
-    public String home(Model model) {
+    public String home(Model model, Authentication authentication) {
         List<Airport> airports = airportService.getAllAirports();
         model.addAttribute("airports", airports);
+        if (authentication != null) {
+            model.addAttribute("username", authentication.getName());
+        }
         return "public/home";
     }
 
@@ -35,10 +39,15 @@ public class PublicController {
             @RequestParam(required = false) String departure,
             @RequestParam(required = false) String arrival,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-            Model model) {
+            Model model,
+            Authentication authentication) {
         
         List<Airport> airports = airportService.getAllAirports();
         model.addAttribute("airports", airports);
+        
+        if (authentication != null) {
+            model.addAttribute("username", authentication.getName());
+        }
         
         if (departure != null && arrival != null && date != null) {
             List<Flight> flights = flightService.searchFlights(departure, arrival, date);
@@ -50,10 +59,13 @@ public class PublicController {
     }
 
     @GetMapping("/flight/{id}")
-    public String flightDetail(@PathVariable Integer id, Model model) {
+    public String flightDetail(@PathVariable Integer id, Model model, Authentication authentication) {
         Flight flight = flightService.getFlightById(id)
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
         model.addAttribute("flight", flight);
+        if (authentication != null) {
+            model.addAttribute("username", authentication.getName());
+        }
         return "public/flight-detail";
     }
 

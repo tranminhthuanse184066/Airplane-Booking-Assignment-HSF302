@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +29,44 @@
         .logo {
             font-size: 24px;
             font-weight: bold;
+        }
+        
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        
+        .btn-login {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-register, .btn-logout {
+            background: white;
+            color: #d4844e;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-name {
+            font-weight: 500;
         }
         
         .container {
@@ -160,8 +199,21 @@
 <body>
     <div class="header">
         <div class="logo">✈️ Vietnam Airlines</div>
-        <div>
+        <div class="header-nav">
             <a href="/" style="color: white; text-decoration: none;">Trang chủ</a>
+            
+            <div sec:authorize="!isAuthenticated()" style="display: flex; gap: 15px;">
+                <a href="/login" class="btn btn-login">Đăng nhập</a>
+                <a href="/register" class="btn btn-register">Đăng ký</a>
+            </div>
+            
+            <div class="user-info" sec:authorize="isAuthenticated()">
+                <span class="user-name" sec:authentication="name">User</span>
+                <a href="/user" class="btn btn-register" style="text-decoration: none;">Dashboard</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-logout">Đăng xuất</button>
+                </form>
+            </div>
         </div>
     </div>
     
