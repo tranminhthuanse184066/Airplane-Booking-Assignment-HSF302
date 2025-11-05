@@ -49,11 +49,17 @@ public class PublicController {
             model.addAttribute("username", authentication.getName());
         }
         
+        List<Flight> flights;
+        // Nếu có tham số tìm kiếm, lọc theo điều kiện
         if (departure != null && arrival != null && date != null) {
-            List<Flight> flights = flightService.searchFlights(departure, arrival, date);
-            model.addAttribute("flights", flights);
+            flights = flightService.searchFlights(departure, arrival, date);
             model.addAttribute("searchPerformed", true);
+        } else {
+            // Hiển thị tất cả chuyến bay nếu không có bộ lọc
+            flights = flightService.getAllFlights();
         }
+        
+        model.addAttribute("flights", flights);
         
         return "public/search";
     }

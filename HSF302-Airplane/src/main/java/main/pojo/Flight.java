@@ -15,6 +15,9 @@ public class Flight {
     @Column(name = "flight_id")
     private Integer flightId;
     
+    @Column(name = "flight_number", length = 20)
+    private String flightNumber;
+
     @Column(name = "departure_airport", nullable = false, length = 10)
     private String departureAirport;
     
@@ -59,7 +62,25 @@ public class Flight {
             this.arrivalDate = arrivalTime.toLocalDate();
         }
     }
-    
+
+    public Flight(String flightNumber, String departureAirport, String arrivalAirport,
+                  LocalDateTime departureTime, LocalDateTime arrivalTime,
+                  BigDecimal price, FlightStatus status) {
+        this.flightNumber = flightNumber;
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.price = price;
+        this.status = status;
+        if (departureTime != null) {
+            this.departureDate = departureTime.toLocalDate();
+        }
+        if (arrivalTime != null) {
+            this.arrivalDate = arrivalTime.toLocalDate();
+        }
+    }
+
     // Getters and Setters
     public Integer getFlightId() {
         return flightId;
@@ -69,6 +90,14 @@ public class Flight {
         this.flightId = flightId;
     }
     
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
+
     public String getDepartureAirport() {
         return departureAirport;
     }

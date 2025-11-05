@@ -307,7 +307,7 @@
             <div class="flight-info-section">
                 <div class="info-row">
                     <span class="info-label">Mã chuyến bay:</span>
-                    <span class="info-value" th:text="'VN' + ${flight.flightId}">VN001</span>
+                    <span class="info-value" th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Trạng thái:</span>

@@ -74,7 +74,8 @@ public class BookingController {
         ticket.setStatus(TicketStatus.BOOKED);
         ticket.setPrice(ticketPrice);
         ticket.setOrder(savedOrder);
-        
+        ticket.setFlight(flight);
+
         Ticket savedTicket = ticketRepository.save(ticket);
         
         // Add to model for confirmation page
@@ -109,7 +110,14 @@ public class BookingController {
         order.setStatus(OrderStatus.PAID);
         orderService.updateOrder(orderId, order);
         
-        // Redirect to user dashboard with success message
-        return "redirect:/user?paymentSuccess=true";
+        // Update all tickets in this order to BOOKED status
+        java.util.List<Ticket> tickets = ticketRepository.findByOrderOrderId(orderId);
+        for (Ticket ticket : tickets) {
+            ticket.setStatus(TicketStatus.BOOKED);
+            ticketRepository.save(ticket);
+        }
+        
+        // Redirect to order detail page to show ticket
+        return "redirect:/user/orders/" + orderId + "?paymentSuccess=true";
     }
 }

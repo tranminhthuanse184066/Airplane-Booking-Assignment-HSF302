@@ -17,7 +17,7 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
-    @Column(name = "full_name", length = 100)
+    @Column(name = "full_name", columnDefinition = "NVARCHAR(100)")
     private String fullName;
     
     @Column(name = "email", length = 100)

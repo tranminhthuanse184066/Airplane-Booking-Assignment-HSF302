@@ -218,6 +218,60 @@
             text-align: center;
             font-weight: bold;
         }
+
+        .ticket-card {
+            background: #f8f9fa;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #ddd;
+        }
+
+        .ticket-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .flight-route-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .route-point-mini {
+            text-align: center;
+        }
+
+        .airport-code-mini {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .time-mini {
+            font-size: 16px;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .route-arrow-mini {
+            font-size: 24px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -232,6 +286,11 @@
     <div class="container">
         <a href="/user" class="btn-back">← Quay lại Dashboard</a>
         
+        <!-- Success message -->
+        <div th:if="${successMessage}" style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+            <strong>✓ <span th:text="${successMessage}">Thanh toán thành công!</span></strong>
+        </div>
+
         <div class="order-card">
             <div class="order-header">
                 <h1>Chi tiết đơn hàng</h1>
@@ -253,7 +312,52 @@
                     <span class="info-value" th:text="${order.phone}">0123456789</span>
                 </div>
             </div>
-            
+
+            <!-- Thông tin vé máy bay -->
+            <div class="info-section" th:if="${tickets != null and !tickets.empty}">
+                <div class="section-title">✈️ Thông tin vé máy bay</div>
+                <div class="ticket-card" th:each="ticket : ${tickets}">
+                    <div class="ticket-header">
+                        <div class="ticket-number">
+                            VÉ MÁY BAY #<span th:text="${ticket.ticketId}">001</span>
+                        </div>
+                        <span class="status-badge status-paid" th:if="${ticket.status.name() == 'BOOKED'}">✓ Đã đặt</span>
+                        <span class="status-badge status-cancelled" th:if="${ticket.status.name() == 'CANCELLED'}">✗ Đã hủy</span>
+                        <span class="status-badge status-paid" th:if="${ticket.status.name() == 'CHECKED_IN'}">✓ Đã check-in</span>
+                    </div>
+
+                    <div th:if="${ticket.flight != null}">
+                        <div class="flight-route-display">
+                            <div class="route-point-mini">
+                                <div class="airport-code-mini" th:text="${ticket.flight.departureAirport}">HAN</div>
+                                <div class="time-mini" th:text="${#temporals.format(ticket.flight.departureTime, 'HH:mm')}">07:00</div>
+                                <div style="font-size: 12px; color: #666;" th:text="${#temporals.format(ticket.flight.departureTime, 'dd/MM/yyyy')}">06/11/2025</div>
+                            </div>
+                            <div class="route-arrow-mini">→</div>
+                            <div class="route-point-mini">
+                                <div class="airport-code-mini" th:text="${ticket.flight.arrivalAirport}">SGN</div>
+                                <div class="time-mini" th:text="${#temporals.format(ticket.flight.arrivalTime, 'HH:mm')}">09:15</div>
+                                <div style="font-size: 12px; color: #666;" th:text="${#temporals.format(ticket.flight.arrivalTime, 'dd/MM/yyyy')}">06/11/2025</div>
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">Mã chuyến bay:</span>
+                            <span class="info-value" th:text="${ticket.flight.flightNumber != null ? ticket.flight.flightNumber : 'VN' + ticket.flight.flightId}">VN100</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Hạng ghế:</span>
+                        <span class="info-value" th:text="${ticket.seatClass}">Economy</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Giá vé:</span>
+                        <span class="info-value" th:text="${#numbers.formatDecimal(ticket.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="price-total">
                 <div class="price-row">
                     <span>Tổng giá trị:</span>

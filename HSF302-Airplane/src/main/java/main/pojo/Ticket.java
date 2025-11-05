@@ -28,6 +28,10 @@ public class Ticket {
     @JoinColumn(name = "order_id")
     private Order order;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
     
@@ -87,6 +91,14 @@ public class Ticket {
         this.order = order;
     }
     
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }

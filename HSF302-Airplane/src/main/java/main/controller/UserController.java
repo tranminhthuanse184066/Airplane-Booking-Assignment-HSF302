@@ -51,8 +51,12 @@ public class UserController {
         return "user/orders";
     }
 
+    @Autowired
+    private main.repository.TicketRepository ticketRepository;
+
     @GetMapping("/orders/{id}")
-    public String orderDetail(@PathVariable Integer id, Authentication authentication, Model model) {
+    public String orderDetail(@PathVariable Integer id, Authentication authentication, Model model,
+                               @RequestParam(required = false) String paymentSuccess) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -65,7 +69,15 @@ public class UserController {
             throw new RuntimeException("Unauthorized access");
         }
         
+        // Get tickets for this order
+        java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(order.getOrderId());
+
+        if ("true".equals(paymentSuccess)) {
+            model.addAttribute("successMessage", "Thanh toán thành công! Vé máy bay của bạn đã sẵn sàng.");
+        }
+
         model.addAttribute("order", order);
+        model.addAttribute("tickets", tickets);
         return "user/order-detail";
     }
 

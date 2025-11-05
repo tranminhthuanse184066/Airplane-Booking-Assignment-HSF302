@@ -14,13 +14,13 @@ public class Airport {
     @Column(name = "code", nullable = false, unique = true, length = 10)
     private String code;
     
-    @Column(name = "name", nullable = false, length = 200)
+    @Column(name = "name", nullable = false, length = 200, columnDefinition = "NVARCHAR(200)")
     private String name;
     
-    @Column(name = "city", length = 100)
+    @Column(name = "city", length = 100, columnDefinition = "NVARCHAR(100)")
     private String city;
     
-    @Column(name = "country", length = 100)
+    @Column(name = "country", length = 100, columnDefinition = "NVARCHAR(100)")
     private String country;
     
     // Constructors
