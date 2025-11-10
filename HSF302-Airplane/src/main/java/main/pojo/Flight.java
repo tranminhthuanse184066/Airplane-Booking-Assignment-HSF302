@@ -43,6 +43,9 @@ public class Flight {
     @Column(name = "arrival_date")
     private LocalDate arrivalDate;
     
+    @Column(name = "has_multiple_classes")
+    private Boolean hasMultipleClasses = false;
+    
     // Constructors
     public Flight() {
     }
@@ -166,5 +169,13 @@ public class Flight {
     
     public void setArrivalDate(LocalDate arrivalDate) {
         this.arrivalDate = arrivalDate;
+    }
+    
+    public Boolean getHasMultipleClasses() {
+        return hasMultipleClasses;
+    }
+    
+    public void setHasMultipleClasses(Boolean hasMultipleClasses) {
+        this.hasMultipleClasses = hasMultipleClasses;
     }
 }

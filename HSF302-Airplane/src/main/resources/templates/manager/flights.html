@@ -155,10 +155,17 @@
                     <a href="/manager/flights/create" class="btn-add">+ Thêm chuyến bay</a>
                 </div>
                 
+                <div style="padding: 10px; background-color: #fff3cd; border-left: 4px solid #FFD700; margin-bottom: 20px; border-radius: 4px;">
+                    <p style="margin: 0; font-size: 14px; color: #856404;">
+                        <strong>Lưu ý:</strong> Chuyến bay có dấu sao (<span style="color: #FFD700; font-weight: bold;">*</span>) là chuyến bay có nhiều hạng vé với mức giá khác nhau.
+                    </p>
+                </div>
+                
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Mã chuyến bay</th>
                             <th>Điểm đi</th>
                             <th>Điểm đến</th>
                             <th>Ngày giờ khởi hành</th>
@@ -171,6 +178,10 @@
                     <tbody>
                         <tr th:each="flight : ${flights}">
                             <td th:text="${flight.flightId}">1</td>
+                            <td>
+                                <span th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span>
+                                <span th:if="${flight.hasMultipleClasses}" style="color: #FFD700; font-weight: bold;">*</span>
+                            </td>
                             <td th:text="${flight.departureAirport}">HAN</td>
                             <td th:text="${flight.arrivalAirport}">SGN</td>
                             <td th:text="${#temporals.format(flight.departureTime, 'dd/MM/yyyy HH:mm')}">01/01/2025 08:00</td>

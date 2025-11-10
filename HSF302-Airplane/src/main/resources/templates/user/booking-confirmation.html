@@ -346,7 +346,7 @@
                 
                 <div class="info-row">
                     <span class="info-label">Mã chuyến bay:</span>
-                    <span class="info-value" th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span>
+                    <span class="info-value" th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span><span th:if="${flight.hasMultipleClasses}" style="color: #FFD700; font-weight: bold;">*</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Hạng ghế:</span>

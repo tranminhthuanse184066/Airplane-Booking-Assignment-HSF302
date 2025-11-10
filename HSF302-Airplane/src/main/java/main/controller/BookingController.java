@@ -50,11 +50,15 @@ public class BookingController {
         Flight flight = flightService.getFlightById(flightId)
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
         
-        // Calculate price based on seat class
+        // Calculate price based on seat class using TicketClass enum
         BigDecimal ticketPrice = flight.getPrice();
-        if ("Business".equals(seatClass)) {
-            // Business class is 2x the base price
-            ticketPrice = ticketPrice.multiply(new BigDecimal("2"));
+        try {
+            main.enumerators.TicketClass ticketClass = main.enumerators.TicketClass.valueOf(seatClass);
+            double multiplier = ticketClass.getPriceMultiplier();
+            ticketPrice = ticketPrice.multiply(new BigDecimal(multiplier));
+        } catch (IllegalArgumentException e) {
+            // Default to Economy if invalid seat class
+            ticketPrice = flight.getPrice();
         }
         
         // Create order

@@ -413,8 +413,38 @@
             </form>
         </div>
         
+        <script>
+            // Đặt ngày tối thiểu là ngày mai
+            document.addEventListener('DOMContentLoaded', function() {
+                const dateInput = document.getElementById('date');
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                // Format: YYYY-MM-DD
+                const year = tomorrow.getFullYear();
+                const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                const day = String(tomorrow.getDate()).padStart(2, '0');
+                const minDate = `${year}-${month}-${day}`;
+                
+                dateInput.setAttribute('min', minDate);
+                
+                // Nếu người dùng chọn ngày trong quá khứ, tự động chuyển sang ngày mai
+                dateInput.addEventListener('change', function() {
+                    if (this.value && this.value < minDate) {
+                        alert('Vui lòng chọn ngày từ ngày mai trở đi!');
+                        this.value = minDate;
+                    }
+                });
+            });
+        </script>
+        
         <div class="flights-list" th:if="${flights != null}">
             <h2>Tất cả chuyến bay</h2>
+            <div style="padding: 10px; background-color: #fff3cd; border-left: 4px solid #FFD700; margin-bottom: 20px; border-radius: 4px;">
+                <p style="margin: 0; font-size: 14px; color: #856404;">
+                    <strong>Lưu ý:</strong> Chuyến bay có dấu sao (<span style="color: #FFD700; font-weight: bold;">*</span>) là chuyến bay có nhiều hạng vé (Thương gia, Phổ thông Đặc biệt, Phổ thông) với mức giá khác nhau.
+                </p>
+            </div>
             
             <div th:if="${!flights.empty}">
                 <div class="flight-card" th:each="flight : ${flights}">
@@ -431,7 +461,7 @@
                             </div>
                         </div>
                         <div class="flight-details">
-                            Mã chuyến bay: <span th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span>
+                            Mã chuyến bay: <span th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span><span th:if="${flight.hasMultipleClasses}" style="color: #FFD700; font-weight: bold;">*</span>
                             | Ngày: <span th:text="${#temporals.format(flight.departureDate, 'dd/MM/yyyy')}">06/11/2025</span>
                         </div>
                     </div>

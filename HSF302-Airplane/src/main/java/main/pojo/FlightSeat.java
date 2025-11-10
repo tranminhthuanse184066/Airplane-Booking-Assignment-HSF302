@@ -2,6 +2,7 @@ package main.pojo;
 
 import jakarta.persistence.*;
 import main.enumerators.SeatStatus;
+import main.enumerators.TicketClass;
 import java.math.BigDecimal;
 
 @Entity
@@ -24,12 +25,19 @@ public class FlightSeat {
     @Column(name = "seat_class", length = 20)
     private String seatClass;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ticket_class", length = 20)
+    private TicketClass ticketClass;
+    
     @Column(name = "seat_number", length = 10)
     private String seatNumber;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20)
     private SeatStatus status;
+    
+    @Column(name = "price", precision = 10, scale = 2)
+    private BigDecimal price;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id")
@@ -45,6 +53,16 @@ public class FlightSeat {
         this.seatClass = seatClass;
         this.seatNumber = seatNumber;
         this.status = status;
+    }
+    
+    public FlightSeat(Flight flight, Seat seat, TicketClass ticketClass, String seatNumber, SeatStatus status, BigDecimal price) {
+        this.flight = flight;
+        this.seat = seat;
+        this.ticketClass = ticketClass;
+        this.seatClass = ticketClass.name();
+        this.seatNumber = seatNumber;
+        this.status = status;
+        this.price = price;
     }
     
     // Getters and Setters
@@ -102,5 +120,22 @@ public class FlightSeat {
     
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+    
+    public TicketClass getTicketClass() {
+        return ticketClass;
+    }
+    
+    public void setTicketClass(TicketClass ticketClass) {
+        this.ticketClass = ticketClass;
+        this.seatClass = ticketClass.name();
+    }
+    
+    public BigDecimal getPrice() {
+        return price;
+    }
+    
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

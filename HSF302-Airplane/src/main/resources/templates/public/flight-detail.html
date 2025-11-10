@@ -258,6 +258,39 @@
             margin-bottom: 15px;
         }
     </style>
+    <script>
+        function updatePrice() {
+            const basePrice = parseFloat(document.getElementById('basePrice').value);
+            const seatClass = document.getElementById('seatClass').value;
+            let multiplier = 1.0;
+            
+            // Xác định hệ số nhân dựa trên loại ghế
+            if (seatClass === 'ECONOMY') {
+                multiplier = 1.0;
+            } else if (seatClass === 'PREMIUM_ECONOMY') {
+                multiplier = 1.5;
+            } else if (seatClass === 'BUSINESS') {
+                multiplier = 2.5;
+            }
+            
+            // Tính giá mới
+            const newPrice = basePrice * multiplier;
+            
+            // Cập nhật hiển thị giá với định dạng số có dấu phẩy
+            const formattedPrice = newPrice.toLocaleString('vi-VN');
+            document.getElementById('displayPrice').textContent = formattedPrice + ' VNĐ';
+            
+            // Cập nhật label của giá vé
+            const priceLabel = document.querySelector('.price-label');
+            if (seatClass === 'ECONOMY') {
+                priceLabel.textContent = 'Giá vé (Phổ thông)';
+            } else if (seatClass === 'PREMIUM_ECONOMY') {
+                priceLabel.textContent = 'Giá vé (Phổ thông Đặc biệt)';
+            } else if (seatClass === 'BUSINESS') {
+                priceLabel.textContent = 'Giá vé (Thương gia)';
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="header">
@@ -307,7 +340,11 @@
             <div class="flight-info-section">
                 <div class="info-row">
                     <span class="info-label">Mã chuyến bay:</span>
-                    <span class="info-value" th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span>
+                    <span class="info-value" th:text="${flight.flightNumber != null ? flight.flightNumber : 'VN' + flight.flightId}">VN100</span><span th:if="${flight.hasMultipleClasses}" style="color: #FFD700; font-weight: bold; font-size: 1.2em;">*</span>
+                </div>
+                <div class="info-row" th:if="${flight.hasMultipleClasses}">
+                    <span class="info-label">Hạng vé:</span>
+                    <span class="info-value" style="color: #FFD700;">Có nhiều hạng vé (Business, Premium Economy, Economy)</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Trạng thái:</span>
@@ -320,8 +357,9 @@
             </div>
             
             <div class="price-section">
-                <div class="price-label">Giá vé</div>
-                <div class="price-amount" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</div>
+                <div class="price-label">Giá vé (Phổ thông)</div>
+                <div class="price-amount" id="displayPrice" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</div>
+                <input type="hidden" id="basePrice" th:value="${flight.price}">
             </div>
         </div>
         
@@ -352,9 +390,10 @@
                     
                     <div class="form-group">
                         <label for="seatClass">Hạng ghế: *</label>
-                        <select id="seatClass" name="seatClass" required>
-                            <option value="Economy">Phổ thông - Economy</option>
-                            <option value="Business">Thương gia - Business</option>
+                        <select id="seatClass" name="seatClass" required onchange="updatePrice()">
+                            <option value="ECONOMY">Phổ thông - Economy (x1.0)</option>
+                            <option value="PREMIUM_ECONOMY">Phổ thông Đặc biệt - Premium Economy (x1.5)</option>
+                            <option value="BUSINESS">Thương gia - Business (x2.5)</option>
                         </select>
                     </div>
                     
