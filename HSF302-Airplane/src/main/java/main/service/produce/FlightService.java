@@ -14,4 +14,5 @@ public interface FlightService {
     List<Flight> getAllFlights();
     List<Flight> searchFlights(String departure, String arrival, LocalDate date);
     List<Flight> getFlightsByStatus(FlightStatus status);
+    int getBookingCountByFlightId(Integer flightId);
 }

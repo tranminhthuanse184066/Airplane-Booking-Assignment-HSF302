@@ -1080,25 +1080,76 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeSeats() {
         if (seatRepository.count() == 0) {
-            // Ghế hạng Business - Hàng 1
+            // Ghế hạng Business - 3 hàng đầu tiên (Hàng 1-3) - 12 ghế
+            // Hàng 1
             seatRepository.save(new Seat("1A"));
             seatRepository.save(new Seat("1B"));
             seatRepository.save(new Seat("1C"));
             seatRepository.save(new Seat("1D"));
             
-            // Ghế hạng Business - Hàng 2
+            // Hàng 2
             seatRepository.save(new Seat("2A"));
             seatRepository.save(new Seat("2B"));
             seatRepository.save(new Seat("2C"));
             seatRepository.save(new Seat("2D"));
 
-            // Ghế hạng Business - Hàng 3
+            // Hàng 3
             seatRepository.save(new Seat("3A"));
             seatRepository.save(new Seat("3B"));
             seatRepository.save(new Seat("3C"));
             seatRepository.save(new Seat("3D"));
 
-            // Ghế hạng Economy - Hàng 10
+            // Ghế hạng Premium Economy - 5 hàng tiếp theo (Hàng 4-8) - 30 ghế
+            // Hàng 4
+            seatRepository.save(new Seat("4A"));
+            seatRepository.save(new Seat("4B"));
+            seatRepository.save(new Seat("4C"));
+            seatRepository.save(new Seat("4D"));
+            seatRepository.save(new Seat("4E"));
+            seatRepository.save(new Seat("4F"));
+
+            // Hàng 5
+            seatRepository.save(new Seat("5A"));
+            seatRepository.save(new Seat("5B"));
+            seatRepository.save(new Seat("5C"));
+            seatRepository.save(new Seat("5D"));
+            seatRepository.save(new Seat("5E"));
+            seatRepository.save(new Seat("5F"));
+
+            // Hàng 6
+            seatRepository.save(new Seat("6A"));
+            seatRepository.save(new Seat("6B"));
+            seatRepository.save(new Seat("6C"));
+            seatRepository.save(new Seat("6D"));
+            seatRepository.save(new Seat("6E"));
+            seatRepository.save(new Seat("6F"));
+
+            // Hàng 7
+            seatRepository.save(new Seat("7A"));
+            seatRepository.save(new Seat("7B"));
+            seatRepository.save(new Seat("7C"));
+            seatRepository.save(new Seat("7D"));
+            seatRepository.save(new Seat("7E"));
+            seatRepository.save(new Seat("7F"));
+
+            // Hàng 8
+            seatRepository.save(new Seat("8A"));
+            seatRepository.save(new Seat("8B"));
+            seatRepository.save(new Seat("8C"));
+            seatRepository.save(new Seat("8D"));
+            seatRepository.save(new Seat("8E"));
+            seatRepository.save(new Seat("8F"));
+
+            // Ghế hạng Economy - Còn lại (Hàng 9-15) - 42 ghế
+            // Hàng 9
+            seatRepository.save(new Seat("9A"));
+            seatRepository.save(new Seat("9B"));
+            seatRepository.save(new Seat("9C"));
+            seatRepository.save(new Seat("9D"));
+            seatRepository.save(new Seat("9E"));
+            seatRepository.save(new Seat("9F"));
+
+            // Hàng 10
             seatRepository.save(new Seat("10A"));
             seatRepository.save(new Seat("10B"));
             seatRepository.save(new Seat("10C"));
@@ -1106,7 +1157,7 @@ public class DataInitializer implements CommandLineRunner {
             seatRepository.save(new Seat("10E"));
             seatRepository.save(new Seat("10F"));
 
-            // Ghế hạng Economy - Hàng 11
+            // Hàng 11
             seatRepository.save(new Seat("11A"));
             seatRepository.save(new Seat("11B"));
             seatRepository.save(new Seat("11C"));
@@ -1114,7 +1165,7 @@ public class DataInitializer implements CommandLineRunner {
             seatRepository.save(new Seat("11E"));
             seatRepository.save(new Seat("11F"));
 
-            // Ghế hạng Economy - Hàng 12
+            // Hàng 12
             seatRepository.save(new Seat("12A"));
             seatRepository.save(new Seat("12B"));
             seatRepository.save(new Seat("12C"));
@@ -1122,7 +1173,7 @@ public class DataInitializer implements CommandLineRunner {
             seatRepository.save(new Seat("12E"));
             seatRepository.save(new Seat("12F"));
 
-            // Ghế hạng Economy - Hàng 13
+            // Hàng 13
             seatRepository.save(new Seat("13A"));
             seatRepository.save(new Seat("13B"));
             seatRepository.save(new Seat("13C"));
@@ -1130,7 +1181,7 @@ public class DataInitializer implements CommandLineRunner {
             seatRepository.save(new Seat("13E"));
             seatRepository.save(new Seat("13F"));
 
-            // Ghế hạng Economy - Hàng 14
+            // Hàng 14
             seatRepository.save(new Seat("14A"));
             seatRepository.save(new Seat("14B"));
             seatRepository.save(new Seat("14C"));
@@ -1138,7 +1189,7 @@ public class DataInitializer implements CommandLineRunner {
             seatRepository.save(new Seat("14E"));
             seatRepository.save(new Seat("14F"));
 
-            // Ghế hạng Economy - Hàng 15
+            // Hàng 15
             seatRepository.save(new Seat("15A"));
             seatRepository.save(new Seat("15B"));
             seatRepository.save(new Seat("15C"));
@@ -1146,7 +1197,10 @@ public class DataInitializer implements CommandLineRunner {
             seatRepository.save(new Seat("15E"));
             seatRepository.save(new Seat("15F"));
 
-            System.out.println("✅ Seats initialized: 48 seats (12 Business + 36 Economy)");
+            System.out.println("✅ Seats initialized: 84 seats (12 Business + 30 Premium Economy + 42 Economy)");
+            System.out.println("   - Hàng 1-3: Thương gia (Business Class) - 12 ghế");
+            System.out.println("   - Hàng 4-8: Phổ thông Đặc biệt (Premium Economy) - 30 ghế");
+            System.out.println("   - Hàng 9-15: Phổ thông (Economy) - 42 ghế");
         }
     }
     
@@ -1178,7 +1232,7 @@ public class DataInitializer implements CommandLineRunner {
                 if (hasMultipleClasses) {
                     // Chuyến bay có nhiều hạng vé: Business, Premium Economy, Economy
                     
-                    // Business Class: 12 ghế (hàng 1-3) - giá cao nhất
+                    // Business Class: 12 ghế đầu tiên (hàng 1-3) - giá cao nhất
                     for (int i = 0; i < 12; i++) {
                         Seat seat = seats.get(i);
                         BigDecimal businessPrice = basePrice.multiply(new BigDecimal(TicketClass.BUSINESS.getPriceMultiplier()));
@@ -1190,8 +1244,8 @@ public class DataInitializer implements CommandLineRunner {
                         totalFlightSeats++;
                     }
                     
-                    // Premium Economy: 18 ghế (hàng 10-12) - giá trung bình
-                    for (int i = 12; i < 30; i++) {
+                    // Premium Economy: 30 ghế tiếp theo (hàng 4-8) - giá trung bình
+                    for (int i = 12; i < 42; i++) {
                         Seat seat = seats.get(i);
                         BigDecimal premiumPrice = basePrice.multiply(new BigDecimal(TicketClass.PREMIUM_ECONOMY.getPriceMultiplier()));
                         FlightSeat flightSeat = new FlightSeat(
@@ -1202,8 +1256,8 @@ public class DataInitializer implements CommandLineRunner {
                         totalFlightSeats++;
                     }
                     
-                    // Economy: 18 ghế còn lại (hàng 13-15) - giá cơ bản
-                    for (int i = 30; i < 48; i++) {
+                    // Economy: 42 ghế còn lại (hàng 9-15) - giá cơ bản
+                    for (int i = 42; i < 84; i++) {
                         Seat seat = seats.get(i);
                         FlightSeat flightSeat = new FlightSeat(
                             flight, seat, TicketClass.ECONOMY, seat.getSeatNumber(), 

@@ -164,6 +164,18 @@
             border-radius: 3px;
             text-decoration: none;
             margin-right: 5px;
+            font-size: 13px;
+        }
+
+        .btn-view {
+            background: #9c27b0;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+            margin-right: 5px;
+            font-size: 13px;
         }
         
         .btn-delete {
@@ -173,6 +185,7 @@
             border: none;
             border-radius: 3px;
             text-decoration: none;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -188,6 +201,7 @@
     <div class="container">
         <div class="sidebar">
             <ul class="sidebar-menu">
+                <li><a href="/">Trang chủ</a></li>
                 <li><a href="/manager" class="active">Dashboard</a></li>
                 <li><a href="/manager/flights">Quản lý chuyến bay</a></li>
                 <li><a href="/manager/airports">Quản lý sân bay</a></li>
@@ -239,6 +253,7 @@
                             <td th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</td>
                             <td th:text="${flight.status}">SCHEDULED</td>
                             <td>
+                                <a th:href="@{/manager/flights/detail/{id}(id=${flight.flightId})}" class="btn-view">Chi tiết</a>
                                 <a th:href="@{/manager/flights/edit/{id}(id=${flight.flightId})}" class="btn-edit">Sửa</a>
                                 <a th:href="@{/manager/flights/delete/{id}(id=${flight.flightId})}" class="btn-delete" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
                             </td>

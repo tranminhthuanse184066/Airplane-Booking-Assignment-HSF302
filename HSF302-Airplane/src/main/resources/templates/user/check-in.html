@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đơn hàng của tôi - Vietnam Airlines</title>
+    <title>Làm thủ tục - Vietnam Airlines</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
             padding: 15px 50px;
@@ -24,18 +24,18 @@
             align-items: center;
             color: white;
         }
-        
+
         .logo {
             font-size: 24px;
             font-weight: bold;
         }
-        
+
         .user-info {
             display: flex;
             gap: 20px;
             align-items: center;
         }
-        
+
         .btn-logout {
             background: white;
             color: #0066cc;
@@ -45,26 +45,26 @@
             cursor: pointer;
             text-decoration: none;
         }
-        
+
         .container {
             display: flex;
             min-height: calc(100vh - 60px);
         }
-        
+
         .sidebar {
             width: 250px;
             background: white;
             box-shadow: 2px 0 4px rgba(0,0,0,0.1);
         }
-        
+
         .sidebar-menu {
             list-style: none;
         }
-        
+
         .sidebar-menu li {
             border-bottom: 1px solid #f0f0f0;
         }
-        
+
         .sidebar-menu a {
             display: block;
             padding: 15px 20px;
@@ -72,75 +72,108 @@
             text-decoration: none;
             transition: background 0.3s;
         }
-        
+
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
             background: #e3f2fd;
             color: #0066cc;
         }
-        
+
         .content {
             flex: 1;
             padding: 30px;
         }
-        
+
         .page-title {
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
-        
+
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+
         .table-container {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-        
+
         th {
             background: #f5f5f5;
             font-weight: bold;
             color: #333;
         }
-        
-        .status-badge {
+
+        .flight-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flight-route {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .flight-time {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .btn-check-in {
+            background: #4caf50;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
             display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
         }
-        
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
+
+        .btn-check-in:hover {
+            background: #45a049;
         }
-        
-        .status-paid {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .status-confirmed {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        
+
         .btn-view {
             background: #2196f3;
             color: white;
@@ -149,43 +182,39 @@
             border-radius: 3px;
             text-decoration: none;
             display: inline-block;
+            margin-right: 5px;
         }
-        
+
         .btn-view:hover {
             background: #1976d2;
         }
-        
-        .btn-pay {
-            background: #28a745;
-            color: white;
-            padding: 5px 15px;
-            border: none;
-            border-radius: 3px;
-            text-decoration: none;
-            display: inline-block;
-            margin-left: 5px;
-        }
-        
-        .btn-pay:hover {
-            background: #218838;
-        }
-        
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: #666;
         }
-        
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
         .empty-state p {
             margin: 10px 0;
         }
-        
+
         .empty-state a {
             color: #0066cc;
             text-decoration: none;
             font-weight: bold;
         }
-        
+
         .empty-state a:hover {
             text-decoration: underline;
         }
@@ -196,33 +225,44 @@
         <div class="logo">✈️ Vietnam Airlines</div>
         <div class="user-info">
             <span>User</span>
-            <a href="/logout" class="btn-logout">Đăng xuất</a>
+            <form action="/logout" method="post" style="display: inline;">
+                <button type="submit" class="btn-logout">Đăng xuất</button>
+            </form>
         </div>
     </div>
-    
+
     <div class="container">
         <div class="sidebar">
             <ul class="sidebar-menu">
                 <li><a href="/user">Dashboard</a></li>
-                <li><a href="/user/orders" class="active">Đơn hàng của tôi</a></li>
-                <li><a href="/user/check-in">Làm thủ tục</a></li>
+                <li><a href="/user/orders">Đơn hàng của tôi</a></li>
+                <li><a href="/user/check-in" class="active">Làm thủ tục</a></li>
                 <li><a href="/user/profile">Thông tin cá nhân</a></li>
                 <li><a href="/">Tìm kiếm chuyến bay</a></li>
             </ul>
         </div>
-        
+
         <div class="content">
-            <h1 class="page-title">Đơn hàng của tôi</h1>
-            
+            <h1 class="page-title">Làm thủ tục online</h1>
+            <p class="page-subtitle">Chọn chuyến bay để thực hiện thủ tục check-in trực tuyến</p>
+
+            <div class="info-box">
+                <h3>📋 Lưu ý khi làm thủ tục online:</h3>
+                <ul>
+                    <li>Thời gian làm thủ tục: Từ 24 giờ đến 1 giờ trước giờ khởi hành</li>
+                    <li>Vui lòng mang theo giấy tờ tùy thân khi lên máy bay</li>
+                    <li>Đối với chuyến bay quốc tế, vui lòng có mặt ở sân bay trước 3 tiếng</li>
+                    <li>Hành lý xách tay tối đa 7kg, kích thước 56cm x 36cm x 23cm</li>
+                </ul>
+            </div>
+
             <div class="table-container">
                 <table th:if="${orders != null and !orders.empty}">
                     <thead>
                         <tr>
                             <th>Mã đơn hàng</th>
-                            <th>Tên khách hàng</th>
-                            <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Tổng tiền</th>
+                            <th>Thông tin chuyến bay</th>
+                            <th>Hành khách</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
@@ -230,33 +270,43 @@
                     <tbody>
                         <tr th:each="order : ${orders}">
                             <td th:text="'#' + ${order.orderId}">1</td>
-                            <td th:text="${order.fullName}">Nguyễn Văn A</td>
-                            <td th:text="${order.email}">user@example.com</td>
-                            <td th:text="${order.phone}">0123456789</td>
-                            <td th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</td>
                             <td>
-                                <span class="status-badge status-pending" th:if="${order.status.name() == 'PENDING'}">Chờ thanh toán</span>
-                                <span class="status-badge status-paid" th:if="${order.status.name() == 'PAID'}">Đã thanh toán</span>
-                                <span class="status-badge status-cancelled" th:if="${order.status.name() == 'CANCELLED'}">Đã hủy</span>
-                                <span class="status-badge status-confirmed" th:if="${order.status.name() == 'CONFIRMED'}">Đã xác nhận</span>
+                                <div class="flight-info">
+                                    <div>
+                                        <div class="flight-route" th:text="${order.tickets[0].flight.departureAirport} + ' → ' + ${order.tickets[0].flight.arrivalAirport}">HAN → SGN</div>
+                                        <div class="flight-time" th:text="${#temporals.format(order.tickets[0].flight.departureTime, 'dd/MM/yyyy HH:mm')}">01/01/2025 08:00</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div th:text="${order.fullName}">Nguyễn Văn A</div>
+                                <div style="font-size: 13px; color: #666;" th:text="${order.email}">user@example.com</div>
+                            </td>
+                            <td>
+                                <span style="background: #d1ecf1; color: #0c5460; padding: 5px 10px; border-radius: 15px; font-size: 12px;">
+                                    Đã xác nhận
+                                </span>
                             </td>
                             <td>
                                 <a th:href="@{/user/orders/{id}(id=${order.orderId})}" class="btn-view">Chi tiết</a>
-                                <form th:if="${order.status.name() == 'PENDING'}" th:action="@{/booking/payment}" method="post" style="display: inline;">
-                                    <input type="hidden" name="orderId" th:value="${order.orderId}">
-                                    <button type="submit" class="btn-pay">Thanh toán</button>
-                                </form>
+                                <a href="#" class="btn-check-in" onclick="alert('Chức năng check-in đang được phát triển. Vui lòng đến quầy làm thủ tục tại sân bay.'); return false;">
+                                    Check-in
+                                </a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                
+
                 <div th:if="${orders == null or orders.empty}" class="empty-state">
-                    <p style="font-size: 18px; font-weight: bold;">Bạn chưa có đơn hàng nào.</p>
-                    <p><a href="/">Tìm kiếm chuyến bay ngay</a></p>
+                    <div class="empty-state-icon">✈️</div>
+                    <h3>Không có chuyến bay nào cần làm thủ tục</h3>
+                    <p>Bạn chưa có đơn đặt chỗ đã xác nhận nào.</p>
+                    <p>Các chuyến bay đã thanh toán và xác nhận sẽ hiển thị tại đây.</p>
+                    <p style="margin-top: 20px;"><a href="/">Tìm kiếm chuyến bay ngay</a></p>
                 </div>
             </div>
         </div>
     </div>
 </body>
 </html>
+

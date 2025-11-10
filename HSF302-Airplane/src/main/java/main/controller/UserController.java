@@ -99,4 +99,20 @@ public class UserController {
         userService.updateUser(user.getUserId(), updatedUser);
         return "redirect:/user/profile";
     }
+
+    @GetMapping("/check-in")
+    public String checkIn(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Get user's confirmed orders that haven't been checked in yet
+        List<Order> orders = orderService.getOrdersByUserId(user.getUserId())
+                .stream()
+                .filter(order -> order.getStatus() == main.enumerators.OrderStatus.CONFIRMED)
+                .collect(java.util.stream.Collectors.toList());
+
+        model.addAttribute("orders", orders);
+        return "user/check-in";
+    }
 }

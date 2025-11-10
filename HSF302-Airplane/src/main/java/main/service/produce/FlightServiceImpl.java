@@ -17,6 +17,9 @@ public class FlightServiceImpl implements FlightService {
     @Autowired
     private FlightRepository flightRepository;
 
+    @Autowired
+    private main.repository.TicketRepository ticketRepository;
+
     @Override
     @Transactional
     public Flight createFlight(Flight flight) {
@@ -63,5 +66,10 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<Flight> getFlightsByStatus(FlightStatus status) {
         return flightRepository.findByStatus(status);
+    }
+
+    @Override
+    public int getBookingCountByFlightId(Integer flightId) {
+        return ticketRepository.countByFlightFlightId(flightId);
     }
 }

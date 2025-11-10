@@ -36,6 +36,19 @@ public class ManagerController {
         return "manager/flights";
     }
 
+    @GetMapping("/flights/detail/{id}")
+    public String viewFlightDetail(@PathVariable Integer id, Model model) {
+        Flight flight = flightService.getFlightById(id)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
+
+        // Get booking statistics for this flight
+        int totalBookings = flightService.getBookingCountByFlightId(id);
+
+        model.addAttribute("flight", flight);
+        model.addAttribute("totalBookings", totalBookings);
+        return "manager/flight-detail";
+    }
+
     @GetMapping("/flights/create")
     public String createFlightForm(Model model) {
         model.addAttribute("flight", new Flight());
@@ -91,23 +104,29 @@ public class ManagerController {
         return "redirect:/manager/airports";
     }
 
-    @GetMapping("/airports/edit/{id}")
-    public String editAirportForm(@PathVariable Integer id, Model model) {
-        Airport airport = airportService.getAirportById(id)
+    @GetMapping("/airports/edit/{code}")
+    public String editAirportForm(@PathVariable String code, Model model) {
+        Airport airport = airportService.getAirportByCode(code)
                 .orElseThrow(() -> new RuntimeException("Airport not found"));
         model.addAttribute("airport", airport);
         return "manager/airport-form";
     }
 
-    @PostMapping("/airports/edit/{id}")
-    public String editAirport(@PathVariable Integer id, @ModelAttribute Airport airport) {
-        airportService.updateAirport(id, airport);
+    @PostMapping("/airports/edit/{code}")
+    public String editAirport(@PathVariable String code, @ModelAttribute Airport airport) {
+        // Get the airport by code to get its ID
+        Airport existingAirport = airportService.getAirportByCode(code)
+                .orElseThrow(() -> new RuntimeException("Airport not found"));
+        airportService.updateAirport(existingAirport.getAirportId(), airport);
         return "redirect:/manager/airports";
     }
 
-    @GetMapping("/airports/delete/{id}")
-    public String deleteAirport(@PathVariable Integer id) {
-        airportService.deleteAirport(id);
+    @GetMapping("/airports/delete/{code}")
+    public String deleteAirport(@PathVariable String code) {
+        // Get the airport by code to get its ID
+        Airport airport = airportService.getAirportByCode(code)
+                .orElseThrow(() -> new RuntimeException("Airport not found"));
+        airportService.deleteAirport(airport.getAirportId());
         return "redirect:/manager/airports";
     }
 }

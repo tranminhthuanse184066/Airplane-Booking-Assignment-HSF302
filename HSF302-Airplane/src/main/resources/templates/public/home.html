@@ -401,7 +401,15 @@
             </div>
             <div class="user-info" sec:authorize="isAuthenticated()">
                 <span class="user-name" sec:authentication="name">User</span>
-                <a href="/user" class="btn btn-register">Dashboard</a>
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <a href="/admin" class="btn btn-register">Dashboard</a>
+                </th:block>
+                <th:block sec:authorize="hasRole('MANAGER')">
+                    <a href="/manager" class="btn btn-register">Dashboard</a>
+                </th:block>
+                <th:block sec:authorize="hasRole('USER')">
+                    <a href="/user" class="btn btn-register">Dashboard</a>
+                </th:block>
                 <form action="/logout" method="post">
                     <button type="submit" class="btn btn-logout">Đăng xuất</button>
                 </form>
@@ -416,9 +424,9 @@
     
     <div class="search-box">
         <div class="search-tabs">
-            <button class="search-tab active">Đặt vé</button>
-            <button class="search-tab">Quản lý đặt chỗ</button>
-            <button class="search-tab">Làm thủ tục</button>
+            <button class="search-tab active" data-tab="search">Đặt vé</button>
+            <a href="/user/orders" class="search-tab" style="text-decoration: none; cursor: pointer;">Quản lý đặt chỗ</a>
+            <a href="/user/check-in" class="search-tab" style="text-decoration: none; cursor: pointer;">Làm thủ tục</a>
         </div>
         <form action="/search" method="get" class="search-form">
             <div class="form-group">
