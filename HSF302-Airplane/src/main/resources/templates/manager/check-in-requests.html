@@ -354,6 +354,11 @@
                 <strong>✗ Đã từ chối yêu cầu check-in!</strong>
             </div>
             
+            <!-- Error message -->
+            <div th:if="${error}" class="alert alert-danger">
+                <strong>✗ Lỗi:</strong> <span th:text="${error}">Error message</span>
+            </div>
+            
             <div class="table-container">
                 <div th:if="${requests != null and !requests.empty}">
                     <div class="request-card" th:each="request : ${requests}">
@@ -429,35 +434,55 @@
     </div>
 
     <script th:inline="javascript">
+        // Prevent browser back/forward cache issues
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                // Page was loaded from cache, reload it
+                window.location.reload();
+            }
+        });
+
         // Show popup if approved
         /*[# th:if="${param.approved}"]*/
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
             showModal('Xác nhận check-in thành công!');
-        };
+        });
         /*[/]*/
 
         // Show popup if rejected
         /*[# th:if="${param.rejected}"]*/
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
             showModal('Đã từ chối yêu cầu check-in!');
-        };
+        });
         /*[/]*/
 
         function showModal(message) {
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('successModal').style.display = 'block';
+            var modal = document.getElementById('successModal');
+            var messageEl = document.getElementById('modalMessage');
             
-            // Auto close after 2 seconds and reload page
-            setTimeout(function() {
-                document.getElementById('successModal').style.display = 'none';
-                // Reload to refresh the list
-                window.location.href = window.location.href.split('?')[0];
-            }, 2000);
+            if (modal && messageEl) {
+                messageEl.textContent = message;
+                modal.style.display = 'block';
+                
+                // Auto close after 2 seconds and clean URL
+                setTimeout(function() {
+                    modal.style.display = 'none';
+                    // Clean URL without reload to prevent white screen
+                    if (window.history.replaceState) {
+                        var cleanUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, cleanUrl);
+                    }
+                }, 2000);
+            }
         }
 
         // Prevent form resubmission on page refresh
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
+        if (window.history.replaceState && (window.location.search.includes('approved') || window.location.search.includes('rejected'))) {
+            // Replace state only if there are success/error parameters
+            setTimeout(function() {
+                var cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }, 2500);
         }
     </script>
 </body>

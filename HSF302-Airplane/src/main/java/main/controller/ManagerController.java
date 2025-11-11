@@ -144,16 +144,15 @@ public class ManagerController {
 
     @GetMapping("/check-in-requests")
     public String listCheckInRequests(Model model) {
-        List<main.pojo.CheckInRequest> pendingRequests = checkInRequestRepository.findByStatus(main.enumerators.CheckInStatus.PENDING);
-        
-        // Load tickets for each order to avoid lazy loading issues
-        for (main.pojo.CheckInRequest request : pendingRequests) {
-            java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(request.getOrder().getOrderId());
-            request.getOrder().setTickets(tickets);
+        try {
+            List<main.pojo.CheckInRequest> pendingRequests = checkInRequestRepository.findByStatus(main.enumerators.CheckInStatus.PENDING);
+            model.addAttribute("requests", pendingRequests);
+            return "manager/check-in-requests";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Có lỗi xảy ra khi tải danh sách yêu cầu check-in: " + e.getMessage());
+            return "manager/check-in-requests";
         }
-        
-        model.addAttribute("requests", pendingRequests);
-        return "manager/check-in-requests";
     }
 
     @PostMapping("/check-in-requests/approve/{id}")
