@@ -239,12 +239,18 @@
                                 <span class="status-badge status-paid" th:if="${order.status.name() == 'PAID'}">Đã thanh toán</span>
                                 <span class="status-badge status-cancelled" th:if="${order.status.name() == 'CANCELLED'}">Đã hủy</span>
                                 <span class="status-badge status-confirmed" th:if="${order.status.name() == 'CONFIRMED'}">Đã xác nhận</span>
+                                <span class="status-badge" style="background: #fff3cd; color: #856404;" th:if="${order.status.name() == 'CHECK_IN_PENDING'}">Chờ xử lý</span>
+                                <span class="status-badge status-paid" th:if="${order.status.name() == 'CONFIRMED'}">Check-in thành công</span>
                             </td>
                             <td>
                                 <a th:href="@{/user/orders/{id}(id=${order.orderId})}" class="btn-view">Chi tiết</a>
                                 <form th:if="${order.status.name() == 'PENDING'}" th:action="@{/booking/payment}" method="post" style="display: inline;">
                                     <input type="hidden" name="orderId" th:value="${order.orderId}">
                                     <button type="submit" class="btn-pay">Thanh toán</button>
+                                </form>
+                                <form th:if="${order.status.name() == 'PAID'}" th:action="@{/user/check-in/request}" method="post" style="display: inline;">
+                                    <input type="hidden" name="orderId" th:value="${order.orderId}">
+                                    <button type="submit" class="btn-pay" style="background: #17a2b8;">Check in</button>
                                 </form>
                             </td>
                         </tr>

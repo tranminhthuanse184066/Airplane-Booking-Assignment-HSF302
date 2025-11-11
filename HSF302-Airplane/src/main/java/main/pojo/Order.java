@@ -33,6 +33,9 @@ public class Order {
     @Column(name = "status", length = 20)
     private OrderStatus status;
     
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private java.util.List<Ticket> tickets;
+    
     // Constructors
     public Order() {
     }
@@ -101,5 +104,13 @@ public class Order {
     
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+    
+    public java.util.List<Ticket> getTickets() {
+        return tickets;
+    }
+    
+    public void setTickets(java.util.List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 }

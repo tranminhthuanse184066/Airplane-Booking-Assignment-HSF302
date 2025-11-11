@@ -115,4 +115,48 @@ public class UserController {
         model.addAttribute("orders", orders);
         return "user/check-in";
     }
+
+    @Autowired
+    private main.repository.CheckInRequestRepository checkInRequestRepository;
+
+    @PostMapping("/check-in/request")
+    public String submitCheckInRequest(@RequestParam Integer orderId, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        Order order = orderService.getOrderById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        // Verify the order belongs to the user
+        if (!order.getUser().getUserId().equals(user.getUserId())) {
+            throw new RuntimeException("Unauthorized access");
+        }
+        
+        // Check if order is paid
+        if (order.getStatus() != main.enumerators.OrderStatus.PAID) {
+            throw new RuntimeException("Order must be paid before check-in");
+        }
+        
+        // Check if there's already a pending check-in request
+        java.util.Optional<main.pojo.CheckInRequest> existingRequest = 
+            checkInRequestRepository.findByOrderAndStatus(order, "PENDING");
+        
+        if (existingRequest.isPresent()) {
+            return "redirect:/user/orders/" + orderId + "?error=alreadyRequested";
+        }
+        
+        // Create check-in request
+        main.pojo.CheckInRequest checkInRequest = new main.pojo.CheckInRequest();
+        checkInRequest.setOrder(order);
+        checkInRequest.setUser(user);
+        checkInRequest.setStatus("PENDING");
+        checkInRequestRepository.save(checkInRequest);
+        
+        // Update order status to CHECK_IN_PENDING
+        order.setStatus(main.enumerators.OrderStatus.CHECK_IN_PENDING);
+        orderService.updateOrder(orderId, order);
+        
+        return "redirect:/user/orders/" + orderId + "?checkInRequested=true";
+    }
 }

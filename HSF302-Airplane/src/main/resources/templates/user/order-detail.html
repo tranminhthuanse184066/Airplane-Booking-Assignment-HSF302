@@ -272,9 +272,67 @@
             font-size: 24px;
             color: #999;
         }
+
+        /* Modal/Popup styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal-success {
+            color: #28a745;
+        }
     </style>
 </head>
 <body>
+    <!-- Popup Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon modal-success">✓</div>
+            <h2 style="color: #28a745; margin-bottom: 10px;">Thành công!</h2>
+            <p id="modalMessage">Yêu cầu check-in đã được gửi thành công!</p>
+        </div>
+    </div>
+
     <div class="header">
         <div class="logo">✈️ Vietnam Airlines</div>
         <div class="user-info">
@@ -313,8 +371,8 @@
                 </div>
             </div>
 
-            <!-- Thông tin vé máy bay -->
-            <div class="info-section" th:if="${tickets != null and !tickets.empty}">
+            <!-- Thông tin vé máy bay - CHỈ HIỂN THỊ KHI ĐÃ CHECK-IN THÀNH CÔNG -->
+            <div class="info-section" th:if="${order.status.name() == 'CONFIRMED' and tickets != null and !tickets.empty}">
                 <div class="section-title">✈️ Thông tin vé máy bay</div>
                 <div class="ticket-card" th:each="ticket : ${tickets}">
                     <div class="ticket-header">
@@ -378,7 +436,10 @@
                         <span class="status-badge status-cancelled" th:if="${order.status.name() == 'CANCELLED'}">Đã hủy</span>
                         <span class="status-badge" 
                               th:classappend="${order.status.name() == 'CONFIRMED'} ? 'status-paid'"
-                              th:if="${order.status.name() == 'CONFIRMED'}">Đã xác nhận</span>
+                              th:if="${order.status.name() == 'CONFIRMED'}">Check-in thành công</span>
+                        <span class="status-badge" 
+                              style="background: #fff3cd; color: #856404;"
+                              th:if="${order.status.name() == 'CHECK_IN_PENDING'}">Chờ xử lý</span>
                     </span>
                 </div>
             </div>
@@ -392,6 +453,24 @@
             <!-- Thông báo cho đơn hàng đã thanh toán -->
             <div class="paid-info" th:if="${order.status.name() == 'PAID'}">
                 <p>✓ Đơn hàng đã được thanh toán thành công!</p>
+                <p>Vui lòng làm thủ tục check-in để nhận vé máy bay.</p>
+            </div>
+
+            <!-- Thông báo check-in requested -->
+            <div th:if="${param.checkInRequested}" style="background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                <strong>✓ Yêu cầu check-in đã được gửi!</strong>
+                <p>Vui lòng chờ Manager xác nhận để nhận vé máy bay.</p>
+            </div>
+            
+            <!-- Thông báo đang chờ xác nhận check-in -->
+            <div class="payment-info" th:if="${order.status.name() == 'CHECK_IN_PENDING'}">
+                <p><strong>⏳ Đang chờ Manager xác nhận check-in</strong></p>
+                <p>Vé máy bay của bạn sẽ được hiển thị sau khi Manager xác nhận.</p>
+            </div>
+            
+            <!-- Thông báo đã xác nhận - hiển thị vé -->
+            <div class="paid-info" th:if="${order.status.name() == 'CONFIRMED'}">
+                <p>✓✓ Check-in thành công! Vé máy bay của bạn đã sẵn sàng.</p>
             </div>
             
             <!-- Form thanh toán chỉ hiện khi đơn hàng chưa thanh toán -->
@@ -399,7 +478,39 @@
                 <input type="hidden" name="orderId" th:value="${order.orderId}">
                 <button type="submit" class="btn-payment">💳 THANH TOÁN NGAY</button>
             </form>
+
+            <!-- Form check-in chỉ hiện khi đơn hàng đã thanh toán -->
+            <form th:if="${order.status.name() == 'PAID'}" th:action="@{/user/check-in/request}" method="post" id="checkInForm">
+                <input type="hidden" name="orderId" th:value="${order.orderId}">
+                <button type="submit" class="btn-payment" style="background: #17a2b8;">✈️ YÊU CẦU CHECK-IN</button>
+            </form>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        // Show popup if check-in was requested
+        /*[# th:if="${param.checkInRequested}"]*/
+        window.onload = function() {
+            showModal('Yêu cầu check-in đã được gửi thành công!');
+        };
+        /*[/]*/
+
+        function showModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('successModal').style.display = 'block';
+            
+            // Auto close after 2 seconds and reload page
+            setTimeout(function() {
+                document.getElementById('successModal').style.display = 'none';
+                // Reload to update status display
+                window.location.href = window.location.href.split('?')[0];
+            }, 2000);
+        }
+
+        // Prevent form resubmission on page refresh
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
 </body>
 </html>

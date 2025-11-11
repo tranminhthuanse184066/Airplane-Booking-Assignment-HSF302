@@ -129,4 +129,91 @@ public class ManagerController {
         airportService.deleteAirport(airport.getAirportId());
         return "redirect:/manager/airports";
     }
+
+    @Autowired
+    private main.repository.CheckInRequestRepository checkInRequestRepository;
+
+    @Autowired
+    private main.repository.OrderRepository orderRepository;
+
+    @Autowired
+    private main.repository.TicketRepository ticketRepository;
+
+    @Autowired
+    private main.repository.UserRepository userRepository;
+
+    @GetMapping("/check-in-requests")
+    public String listCheckInRequests(Model model) {
+        List<main.pojo.CheckInRequest> pendingRequests = checkInRequestRepository.findByStatus("PENDING");
+        
+        // Load tickets for each order to avoid lazy loading issues
+        for (main.pojo.CheckInRequest request : pendingRequests) {
+            java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(request.getOrder().getOrderId());
+            request.getOrder().setTickets(tickets);
+        }
+        
+        model.addAttribute("requests", pendingRequests);
+        return "manager/check-in-requests";
+    }
+
+    @PostMapping("/check-in-requests/approve/{id}")
+    public String approveCheckInRequest(@PathVariable Integer id, 
+                                        org.springframework.security.core.Authentication authentication) {
+        main.pojo.CheckInRequest request = checkInRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Check-in request not found"));
+        
+        // Get manager user
+        String managerEmail = authentication.getName();
+        main.pojo.User manager = userRepository.findByEmail(managerEmail)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+        
+        // Update request status
+        request.setStatus("APPROVED");
+        request.setProcessedAt(java.time.LocalDateTime.now());
+        request.setProcessedBy(manager);
+        checkInRequestRepository.save(request);
+        
+        // Update order status to CONFIRMED
+        main.pojo.Order order = request.getOrder();
+        order.setStatus(main.enumerators.OrderStatus.CONFIRMED);
+        orderRepository.save(order);
+        
+        // Update all tickets in this order to CHECKED_IN status
+        java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(order.getOrderId());
+        for (main.pojo.Ticket ticket : tickets) {
+            ticket.setStatus(main.enumerators.TicketStatus.CHECKED_IN);
+            ticketRepository.save(ticket);
+        }
+        
+        return "redirect:/manager/check-in-requests?approved=true";
+    }
+
+    @PostMapping("/check-in-requests/reject/{id}")
+    public String rejectCheckInRequest(@PathVariable Integer id, 
+                                       @RequestParam(required = false) String notes,
+                                       org.springframework.security.core.Authentication authentication) {
+        main.pojo.CheckInRequest request = checkInRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Check-in request not found"));
+        
+        // Get manager user
+        String managerEmail = authentication.getName();
+        main.pojo.User manager = userRepository.findByEmail(managerEmail)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+        
+        // Update request status
+        request.setStatus("REJECTED");
+        request.setProcessedAt(java.time.LocalDateTime.now());
+        request.setProcessedBy(manager);
+        if (notes != null && !notes.isEmpty()) {
+            request.setNotes(notes);
+        }
+        checkInRequestRepository.save(request);
+        
+        // Update order status back to PAID
+        main.pojo.Order order = request.getOrder();
+        order.setStatus(main.enumerators.OrderStatus.PAID);
+        orderRepository.save(order);
+        
+        return "redirect:/manager/check-in-requests?rejected=true";
+    }
 }

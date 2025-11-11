@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yêu cầu Check-in - Vietnam Airlines Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #0066cc;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #e3f2fd;
+            color: #0066cc;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .page-title {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .request-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .request-id {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        
+        .request-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .flight-info {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .flight-route {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .airport {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        
+        .arrow {
+            color: #999;
+            font-size: 24px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-approve:hover {
+            background: #218838;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-reject:hover {
+            background: #c82333;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        /* Modal/Popup styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal-success {
+            color: #28a745;
+        }
+        
+        .empty-state p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Popup Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon modal-success">✓</div>
+            <h2 style="color: #28a745; margin-bottom: 10px;">Thành công!</h2>
+            <p id="modalMessage">Xác nhận check-in thành công!</p>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="logo">✈️ Vietnam Airlines - Manager</div>
+        <div class="user-info">
+            <span>Manager</span>
+            <a href="/logout" class="btn-logout">Đăng xuất</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/manager">Dashboard</a></li>
+                <li><a href="/manager/flights">Quản lý chuyến bay</a></li>
+                <li><a href="/manager/airports">Quản lý sân bay</a></li>
+                <li><a href="/manager/check-in-requests" class="active">Yêu cầu Check-in</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h1 class="page-title">Yêu cầu Check-in</h1>
+            
+            <!-- Success message -->
+            <div th:if="${param.approved}" class="alert alert-success">
+                <strong>✓ Đã xác nhận check-in thành công!</strong>
+            </div>
+            
+            <!-- Rejected message -->
+            <div th:if="${param.rejected}" class="alert alert-danger">
+                <strong>✗ Đã từ chối yêu cầu check-in!</strong>
+            </div>
+            
+            <div class="table-container">
+                <div th:if="${requests != null and !requests.empty}">
+                    <div class="request-card" th:each="request : ${requests}">
+                        <div class="request-header">
+                            <div>
+                                <div class="request-id">Yêu cầu #<span th:text="${request.requestId}">1</span></div>
+                                <div class="request-date">
+                                    <span th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy HH:mm')}">11/11/2025 10:30</span>
+                                </div>
+                            </div>
+                            <span class="status-badge">Chờ xác nhận</span>
+                        </div>
+                        
+                        <div class="request-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Mã đơn hàng:</span>
+                                <span class="detail-value">#<span th:text="${request.order.orderId}">123</span></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Khách hàng:</span>
+                                <span class="detail-value" th:text="${request.user.fullName}">Nguyễn Văn A</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Email:</span>
+                                <span class="detail-value" th:text="${request.user.email}">user@example.com</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Số điện thoại:</span>
+                                <span class="detail-value" th:text="${request.order.phone}">0123456789</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Flight Information -->
+                        <div class="flight-info" th:if="${request.order.tickets != null and !request.order.tickets.empty}">
+                            <div th:with="ticket=${request.order.tickets[0]}">
+                                <div class="detail-label">Thông tin chuyến bay:</div>
+                                <div class="flight-route" th:if="${ticket.flight != null}">
+                                    <div>
+                                        <div class="airport" th:text="${ticket.flight.departureAirport}">HAN</div>
+                                        <div style="font-size: 12px; color: #666;" th:text="${#temporals.format(ticket.flight.departureTime, 'HH:mm dd/MM')}">07:00 06/11</div>
+                                    </div>
+                                    <div class="arrow">→</div>
+                                    <div>
+                                        <div class="airport" th:text="${ticket.flight.arrivalAirport}">SGN</div>
+                                        <div style="font-size: 12px; color: #666;" th:text="${#temporals.format(ticket.flight.arrivalTime, 'HH:mm dd/MM')}">09:15 06/11</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 14px;">
+                                    <strong>Mã chuyến bay:</strong> 
+                                    <span th:text="${ticket.flight.flightNumber != null ? ticket.flight.flightNumber : 'VN' + ticket.flight.flightId}">VN100</span>
+                                    | <strong>Hạng ghế:</strong> <span th:text="${ticket.seatClass}">Economy</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <form th:action="@{/manager/check-in-requests/approve/{id}(id=${request.requestId})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-approve">✓ Xác nhận</button>
+                            </form>
+                            <form th:action="@{/manager/check-in-requests/reject/{id}(id=${request.requestId})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-reject" onclick="return confirm('Bạn có chắc muốn từ chối yêu cầu này?')">✗ Từ chối</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${requests == null or requests.empty}" class="empty-state">
+                    <p style="font-size: 18px; font-weight: bold;">✓ Không có yêu cầu check-in nào đang chờ xử lý.</p>
+                    <p>Tất cả các yêu cầu đã được xử lý.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        // Show popup if approved
+        /*[# th:if="${param.approved}"]*/
+        window.onload = function() {
+            showModal('Xác nhận check-in thành công!');
+        };
+        /*[/]*/
+
+        // Show popup if rejected
+        /*[# th:if="${param.rejected}"]*/
+        window.onload = function() {
+            showModal('Đã từ chối yêu cầu check-in!');
+        };
+        /*[/]*/
+
+        function showModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('successModal').style.display = 'block';
+            
+            // Auto close after 2 seconds and reload page
+            setTimeout(function() {
+                document.getElementById('successModal').style.display = 'none';
+                // Reload to refresh the list
+                window.location.href = window.location.href.split('?')[0];
+            }, 2000);
+        }
+
+        // Prevent form resubmission on page refresh
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+</body>
+</html>
