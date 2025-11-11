@@ -72,6 +72,12 @@ public class UserController {
         // Get tickets for this order
         java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(order.getOrderId());
 
+        // Get check-in request for this order (if exists)
+        java.util.List<main.pojo.CheckInRequest> checkInRequests = checkInRequestRepository.findByOrderOrderId(order.getOrderId());
+        if (!checkInRequests.isEmpty()) {
+            model.addAttribute("checkInRequest", checkInRequests.get(checkInRequests.size() - 1)); // Get latest request
+        }
+
         if ("true".equals(paymentSuccess)) {
             model.addAttribute("successMessage", "Thanh toán thành công! Vé máy bay của bạn đã sẵn sàng.");
         }
@@ -140,7 +146,7 @@ public class UserController {
         
         // Check if there's already a pending check-in request
         java.util.Optional<main.pojo.CheckInRequest> existingRequest = 
-            checkInRequestRepository.findByOrderAndStatus(order, "PENDING");
+            checkInRequestRepository.findByOrderAndStatus(order, main.enumerators.CheckInStatus.PENDING);
         
         if (existingRequest.isPresent()) {
             return "redirect:/user/orders/" + orderId + "?error=alreadyRequested";
@@ -150,7 +156,7 @@ public class UserController {
         main.pojo.CheckInRequest checkInRequest = new main.pojo.CheckInRequest();
         checkInRequest.setOrder(order);
         checkInRequest.setUser(user);
-        checkInRequest.setStatus("PENDING");
+        checkInRequest.setStatus(main.enumerators.CheckInStatus.PENDING);
         checkInRequestRepository.save(checkInRequest);
         
         // Update order status to CHECK_IN_PENDING

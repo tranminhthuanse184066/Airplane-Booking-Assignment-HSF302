@@ -144,7 +144,7 @@ public class ManagerController {
 
     @GetMapping("/check-in-requests")
     public String listCheckInRequests(Model model) {
-        List<main.pojo.CheckInRequest> pendingRequests = checkInRequestRepository.findByStatus("PENDING");
+        List<main.pojo.CheckInRequest> pendingRequests = checkInRequestRepository.findByStatus(main.enumerators.CheckInStatus.PENDING);
         
         // Load tickets for each order to avoid lazy loading issues
         for (main.pojo.CheckInRequest request : pendingRequests) {
@@ -168,7 +168,7 @@ public class ManagerController {
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
         
         // Update request status
-        request.setStatus("APPROVED");
+        request.setStatus(main.enumerators.CheckInStatus.APPROVED);
         request.setProcessedAt(java.time.LocalDateTime.now());
         request.setProcessedBy(manager);
         checkInRequestRepository.save(request);
@@ -201,7 +201,7 @@ public class ManagerController {
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
         
         // Update request status
-        request.setStatus("REJECTED");
+        request.setStatus(main.enumerators.CheckInStatus.REJECTED);
         request.setProcessedAt(java.time.LocalDateTime.now());
         request.setProcessedBy(manager);
         if (notes != null && !notes.isEmpty()) {

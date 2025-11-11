@@ -1,6 +1,7 @@
 package main.pojo;
 
 import jakarta.persistence.*;
+import main.enumerators.CheckInStatus;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,8 +21,9 @@ public class CheckInRequest {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20)
-    private String status; // PENDING, APPROVED, REJECTED
+    private CheckInStatus status; // PENDING, APPROVED, REJECTED
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -40,7 +42,7 @@ public class CheckInRequest {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         if (status == null) {
-            status = "PENDING";
+            status = CheckInStatus.PENDING;
         }
     }
     
@@ -48,7 +50,7 @@ public class CheckInRequest {
     public CheckInRequest() {
     }
     
-    public CheckInRequest(Order order, User user, String status) {
+    public CheckInRequest(Order order, User user, CheckInStatus status) {
         this.order = order;
         this.user = user;
         this.status = status;
@@ -79,11 +81,11 @@ public class CheckInRequest {
         this.user = user;
     }
     
-    public String getStatus() {
+    public CheckInStatus getStatus() {
         return status;
     }
     
-    public void setStatus(String status) {
+    public void setStatus(CheckInStatus status) {
         this.status = status;
     }
     

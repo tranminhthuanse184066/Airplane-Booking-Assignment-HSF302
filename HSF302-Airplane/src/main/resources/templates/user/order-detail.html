@@ -429,18 +429,56 @@
             
             <div class="info-section">
                 <div class="info-row">
-                    <span class="info-label">Trạng thái:</span>
+                    <span class="info-label">Trạng thái đơn hàng:</span>
                     <span class="info-value">
                         <span class="status-badge status-pending" th:if="${order.status.name() == 'PENDING'}">Chờ thanh toán</span>
                         <span class="status-badge status-paid" th:if="${order.status.name() == 'PAID'}">Đã thanh toán</span>
                         <span class="status-badge status-cancelled" th:if="${order.status.name() == 'CANCELLED'}">Đã hủy</span>
                         <span class="status-badge" 
                               th:classappend="${order.status.name() == 'CONFIRMED'} ? 'status-paid'"
-                              th:if="${order.status.name() == 'CONFIRMED'}">Check-in thành công</span>
+                              th:if="${order.status.name() == 'CONFIRMED'}">Đã xác nhận</span>
                         <span class="status-badge" 
                               style="background: #fff3cd; color: #856404;"
-                              th:if="${order.status.name() == 'CHECK_IN_PENDING'}">Chờ xử lý</span>
+                              th:if="${order.status.name() == 'CHECK_IN_PENDING'}">Chờ xử lý check-in</span>
                     </span>
+                </div>
+
+                <!-- Check-in Request Status - chỉ hiển thị khi có yêu cầu check-in -->
+                <div class="info-row" th:if="${checkInRequest != null}">
+                    <span class="info-label">Trạng thái check-in:</span>
+                    <span class="info-value">
+                        <span class="status-badge" 
+                              style="background: #fff3cd; color: #856404;"
+                              th:if="${checkInRequest.status.name() == 'PENDING'}">
+                              ⏳ Đang chờ xác nhận
+                        </span>
+                        <span class="status-badge status-paid" 
+                              th:if="${checkInRequest.status.name() == 'APPROVED'}">
+                              ✓ Đã xác nhận
+                        </span>
+                        <span class="status-badge status-cancelled" 
+                              th:if="${checkInRequest.status.name() == 'REJECTED'}">
+                              ✗ Đã từ chối
+                        </span>
+                    </span>
+                </div>
+
+                <!-- Thông tin thời gian check-in request -->
+                <div class="info-row" th:if="${checkInRequest != null}">
+                    <span class="info-label">Thời gian yêu cầu:</span>
+                    <span class="info-value" th:text="${#temporals.format(checkInRequest.createdAt, 'HH:mm dd/MM/yyyy')}">10:30 11/11/2025</span>
+                </div>
+
+                <!-- Thông tin thời gian xử lý (nếu đã xử lý) -->
+                <div class="info-row" th:if="${checkInRequest != null && checkInRequest.processedAt != null}">
+                    <span class="info-label">Thời gian xử lý:</span>
+                    <span class="info-value" th:text="${#temporals.format(checkInRequest.processedAt, 'HH:mm dd/MM/yyyy')}">10:35 11/11/2025</span>
+                </div>
+
+                <!-- Ghi chú từ chối (nếu có) -->
+                <div class="info-row" th:if="${checkInRequest != null && checkInRequest.status.name() == 'REJECTED' && checkInRequest.notes != null}">
+                    <span class="info-label">Lý do từ chối:</span>
+                    <span class="info-value" th:text="${checkInRequest.notes}" style="color: #dc3545;">Không hợp lệ</span>
                 </div>
             </div>
             
@@ -488,23 +526,38 @@
     </div>
 
     <script th:inline="javascript">
-        // Show popup if check-in was requested
-        /*[# th:if="${param.checkInRequested}"]*/
-        window.onload = function() {
+        // Check if check-in was requested
+        const urlParams = new URLSearchParams(window.location.search);
+        const checkInRequested = urlParams.get('checkInRequested');
+        
+        if (checkInRequested === 'true') {
+            console.log('Check-in requested - showing modal');
             showModal('Yêu cầu check-in đã được gửi thành công!');
-        };
-        /*[/]*/
+        }
 
         function showModal(message) {
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('successModal').style.display = 'block';
+            console.log('Showing modal with message:', message);
+            const modal = document.getElementById('successModal');
+            const modalMessage = document.getElementById('modalMessage');
             
-            // Auto close after 2 seconds and reload page
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+            
+            // Auto close after 2.5 seconds and reload page
             setTimeout(function() {
-                document.getElementById('successModal').style.display = 'none';
-                // Reload to update status display
-                window.location.href = window.location.href.split('?')[0];
-            }, 2000);
+                modal.style.display = 'none';
+                // Remove query params and reload to update status display
+                window.location.href = window.location.pathname;
+            }, 2500);
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('successModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+                window.location.href = window.location.pathname;
+            }
         }
 
         // Prevent form resubmission on page refresh

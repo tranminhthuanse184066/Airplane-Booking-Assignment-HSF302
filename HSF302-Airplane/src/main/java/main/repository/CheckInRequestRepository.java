@@ -1,5 +1,6 @@
 package main.repository;
 
+import main.enumerators.CheckInStatus;
 import main.pojo.CheckInRequest;
 import main.pojo.Order;
 import main.pojo.User;
@@ -11,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface CheckInRequestRepository extends JpaRepository<CheckInRequest, Integer> {
-    List<CheckInRequest> findByStatus(String status);
+    List<CheckInRequest> findByStatus(CheckInStatus status);
     List<CheckInRequest> findByUserUserId(Integer userId);
     List<CheckInRequest> findByOrderOrderId(Integer orderId);
-    Optional<CheckInRequest> findByOrderAndStatus(Order order, String status);
+    Optional<CheckInRequest> findByOrderAndStatus(Order order, CheckInStatus status);
 }
