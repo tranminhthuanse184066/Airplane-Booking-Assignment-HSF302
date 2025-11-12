@@ -83,6 +83,25 @@
             color: #0066cc;
             text-decoration: none;
         }
+        
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +110,12 @@
             <h1>✈️ Vietnam Airlines</h1>
             <p>Tạo tài khoản mới</p>
         </div>
+        
+        <!-- Thông báo lỗi -->
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        
+        <!-- Thông báo thành công -->
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         
         <form action="/register" method="post">
             <div class="form-group">

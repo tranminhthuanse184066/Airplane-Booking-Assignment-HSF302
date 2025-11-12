@@ -1,15 +1,21 @@
 package main.controller;
 
+import main.enumerators.RoleEnum;
 import main.pojo.Airport;
 import main.pojo.Flight;
+import main.pojo.Role;
+import main.pojo.User;
+import main.repository.RoleRepository;
 import main.service.category.AirportService;
 import main.service.produce.FlightService;
+import main.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +29,12 @@ public class PublicController {
 
     @Autowired
     private AirportService airportService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @GetMapping
     public String home(Model model, Authentication authentication) {
@@ -83,6 +95,52 @@ public class PublicController {
     @GetMapping("/register")
     public String register() {
         return "auth/register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(
+            @RequestParam String fullName,
+            @RequestParam String email,
+            @RequestParam String phone,
+            @RequestParam String password,
+            @RequestParam String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            // Kiểm tra mật khẩu khớp
+            if (!password.equals(confirmPassword)) {
+                redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
+                return "redirect:/register";
+            }
+            
+            // Kiểm tra email đã tồn tại
+            if (userService.existsByEmail(email)) {
+                redirectAttributes.addFlashAttribute("error", "Email đã được sử dụng!");
+                return "redirect:/register";
+            }
+            
+            // Lấy role USER (mặc định cho người đăng ký)
+            Role userRole = roleRepository.findByRoleName(RoleEnum.USER)
+                    .orElseThrow(() -> new RuntimeException("Role USER không tồn tại trong hệ thống"));
+            
+            // Tạo user mới
+            User newUser = new User();
+            newUser.setFullName(fullName);
+            newUser.setEmail(email);
+            newUser.setPhone(phone);
+            newUser.setPassword(password); // Lưu plain text như trong UserServiceImpl
+            newUser.setRole(userRole);
+            
+            // Lưu user
+            userService.createUser(newUser);
+            
+            redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
+            return "redirect:/login";
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            return "redirect:/register";
+        }
     }
 
     @GetMapping("/access-denied")

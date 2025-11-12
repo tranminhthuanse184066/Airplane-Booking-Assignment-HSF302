@@ -90,6 +90,14 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -98,6 +106,8 @@
             <h1>✈️ Vietnam Airlines</h1>
             <p>Đăng nhập vào tài khoản</p>
         </div>
+        
+        <div class="success-message" th:if="${success}" th:text="${success}"></div>
         
         <div class="error-message" th:if="${param.error}">
             Email hoặc mật khẩu không đúng!
