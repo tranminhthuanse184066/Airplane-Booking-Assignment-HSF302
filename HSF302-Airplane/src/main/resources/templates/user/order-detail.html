@@ -551,16 +551,11 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Show success message
-                        showModal(data.message);
-                        
-                        // Reload page after 2.5 seconds
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2500);
+                        // Reload page immediately to update status
+                        location.reload();
                     } else {
                         // Show error message
-                        showModal(data.message);
+                        alert(data.message);
                         
                         // Re-enable button
                         submitBtn.disabled = false;
@@ -569,30 +564,13 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showModal('Có lỗi xảy ra. Vui lòng thử lại!');
+                    alert('Có lỗi xảy ra. Vui lòng thử lại!');
                     
                     // Re-enable button
                     submitBtn.disabled = false;
                     submitBtn.textContent = '✈️ YÊU CẦU CHECK-IN';
                 });
             });
-        }
-
-        function showModal(message) {
-            console.log('Showing modal with message:', message);
-            const modal = document.getElementById('successModal');
-            const modalMessage = document.getElementById('modalMessage');
-            
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
-
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            const modal = document.getElementById('successModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
         }
 
         // Prevent form resubmission on page refresh
