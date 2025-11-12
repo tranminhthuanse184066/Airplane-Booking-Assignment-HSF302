@@ -41,7 +41,6 @@ public class ManagerController {
         Flight flight = flightService.getFlightById(id)
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
 
-        // Get booking statistics for this flight
         int totalBookings = flightService.getBookingCountByFlightId(id);
 
         model.addAttribute("flight", flight);
@@ -114,7 +113,6 @@ public class ManagerController {
 
     @PostMapping("/airports/edit/{code}")
     public String editAirport(@PathVariable String code, @ModelAttribute Airport airport) {
-        // Get the airport by code to get its ID
         Airport existingAirport = airportService.getAirportByCode(code)
                 .orElseThrow(() -> new RuntimeException("Airport not found"));
         airportService.updateAirport(existingAirport.getAirportId(), airport);
@@ -123,7 +121,6 @@ public class ManagerController {
 
     @GetMapping("/airports/delete/{code}")
     public String deleteAirport(@PathVariable String code) {
-        // Get the airport by code to get its ID
         Airport airport = airportService.getAirportByCode(code)
                 .orElseThrow(() -> new RuntimeException("Airport not found"));
         airportService.deleteAirport(airport.getAirportId());
@@ -161,23 +158,19 @@ public class ManagerController {
         main.pojo.CheckInRequest request = checkInRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Check-in request not found"));
         
-        // Get manager user
         String managerEmail = authentication.getName();
         main.pojo.User manager = userRepository.findByEmail(managerEmail)
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
         
-        // Update request status
         request.setStatus(main.enumerators.CheckInStatus.APPROVED);
         request.setProcessedAt(java.time.LocalDateTime.now());
         request.setProcessedBy(manager);
         checkInRequestRepository.save(request);
         
-        // Update order status to CONFIRMED
         main.pojo.Order order = request.getOrder();
         order.setStatus(main.enumerators.OrderStatus.CONFIRMED);
         orderRepository.save(order);
         
-        // Update all tickets in this order to CHECKED_IN status
         java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(order.getOrderId());
         for (main.pojo.Ticket ticket : tickets) {
             ticket.setStatus(main.enumerators.TicketStatus.CHECKED_IN);
@@ -194,12 +187,10 @@ public class ManagerController {
         main.pojo.CheckInRequest request = checkInRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Check-in request not found"));
         
-        // Get manager user
         String managerEmail = authentication.getName();
         main.pojo.User manager = userRepository.findByEmail(managerEmail)
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
         
-        // Update request status
         request.setStatus(main.enumerators.CheckInStatus.REJECTED);
         request.setProcessedAt(java.time.LocalDateTime.now());
         request.setProcessedBy(manager);
@@ -208,7 +199,6 @@ public class ManagerController {
         }
         checkInRequestRepository.save(request);
         
-        // Update order status back to PAID
         main.pojo.Order order = request.getOrder();
         order.setStatus(main.enumerators.OrderStatus.PAID);
         orderRepository.save(order);

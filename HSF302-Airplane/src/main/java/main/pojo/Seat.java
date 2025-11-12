@@ -14,7 +14,6 @@ public class Seat {
     @Column(name = "seat_number", nullable = false, length = 10)
     private String seatNumber;
     
-    // Constructors
     public Seat() {
     }
     
@@ -22,7 +21,6 @@ public class Seat {
         this.seatNumber = seatNumber;
     }
     
-    // Getters and Setters
     public Integer getSeatId() {
         return seatId;
     }

@@ -21,8 +21,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Sử dụng NoOpPasswordEncoder để chấp nhận plain text password
-        // LƯU Ý: Không khuyến khích cho môi trường production
         return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
     }
 
@@ -42,24 +40,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Tạm thời disable CSRF để test dễ hơn
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                // Public pages
                 .requestMatchers("/", "/search", "/flight/**", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                 
-                // Admin pages - only ADMIN role
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 
-                // Manager pages - only MANAGER role
                 .requestMatchers("/manager/**").hasRole("MANAGER")
                 
-                // User pages - only USER role
                 .requestMatchers("/user/**").hasRole("USER")
                 
-                // Booking pages - only USER role
                 .requestMatchers("/booking/**").hasRole("USER")
                 
-                // All other requests need authentication
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -68,7 +60,6 @@ public class SecurityConfig {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler((request, response, authentication) -> {
-                    // Redirect based on role
                     String redirectUrl = "/";
                     System.out.println("✅ Login successful for: " + authentication.getName());
                     System.out.println("✅ Authorities: " + authentication.getAuthorities());

@@ -40,7 +40,6 @@ public class Ticket {
         bookingDate = LocalDateTime.now();
     }
     
-    // Constructors
     public Ticket() {
     }
     
@@ -50,7 +49,6 @@ public class Ticket {
         this.price = price;
     }
     
-    // Getters and Setters
     public Integer getTicketId() {
         return ticketId;
     }

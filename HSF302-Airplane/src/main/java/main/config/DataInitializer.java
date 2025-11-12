@@ -47,22 +47,16 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Initialize Roles
         initializeRoles();
         
-        // Initialize Users
         initializeUsers();
         
-        // Initialize Airports
         initializeAirports();
         
-        // Initialize Seats
         initializeSeats();
         
-        // Initialize Flights
         initializeFlights();
         
-        // Initialize Flight Seats
         initializeFlightSeats();
     }
 
@@ -81,7 +75,6 @@ public class DataInitializer implements CommandLineRunner {
             Role managerRole = roleRepository.findByRoleName(RoleEnum.MANAGER).orElseThrow();
             Role userRole = roleRepository.findByRoleName(RoleEnum.USER).orElseThrow();
 
-            // Create Admin
             User admin = new User();
             admin.setEmail("admin@gmail.com");
             admin.setPassword("admin");
@@ -90,7 +83,6 @@ public class DataInitializer implements CommandLineRunner {
             admin.setRole(adminRole);
             userRepository.save(admin);
 
-            // Create Manager 1
             User manager1 = new User();
             manager1.setEmail("manager1@gmail.com");
             manager1.setPassword("manager1");
@@ -99,7 +91,6 @@ public class DataInitializer implements CommandLineRunner {
             manager1.setRole(managerRole);
             userRepository.save(manager1);
 
-            // Create Manager 2
             User manager2 = new User();
             manager2.setEmail("manager2@gmail.com");
             manager2.setPassword("manager2");
@@ -108,7 +99,6 @@ public class DataInitializer implements CommandLineRunner {
             manager2.setRole(managerRole);
             userRepository.save(manager2);
 
-            // Create User 1
             User user1 = new User();
             user1.setEmail("user1@gmail.com");
             user1.setPassword("user1");
@@ -117,7 +107,6 @@ public class DataInitializer implements CommandLineRunner {
             user1.setRole(userRole);
             userRepository.save(user1);
 
-            // Create User 2
             User user2 = new User();
             user2.setEmail("user2@gmail.com");
             user2.setPassword("user2");
@@ -126,7 +115,6 @@ public class DataInitializer implements CommandLineRunner {
             user2.setRole(userRole);
             userRepository.save(user2);
 
-            // Create User 3
             User user3 = new User();
             user3.setEmail("user3@gmail.com");
             user3.setPassword("user3");
@@ -155,9 +143,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeFlights() {
         if (flightRepository.count() == 0) {
-            // Chuyến bay từ ngày 10/11 đến 30/11/2025
             
-            // ==================== 2025-11-10 ====================
             flightRepository.save(new Flight("VN100", "SGN", "HAN",
                 LocalDateTime.of(2025, 11, 10, 6, 0),
                 LocalDateTime.of(2025, 11, 10, 8, 15),
@@ -1080,27 +1066,21 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeSeats() {
         if (seatRepository.count() == 0) {
-            // Ghế hạng Business - 3 hàng đầu tiên (Hàng 1-3) - 12 ghế
-            // Hàng 1
             seatRepository.save(new Seat("1A"));
             seatRepository.save(new Seat("1B"));
             seatRepository.save(new Seat("1C"));
             seatRepository.save(new Seat("1D"));
             
-            // Hàng 2
             seatRepository.save(new Seat("2A"));
             seatRepository.save(new Seat("2B"));
             seatRepository.save(new Seat("2C"));
             seatRepository.save(new Seat("2D"));
 
-            // Hàng 3
             seatRepository.save(new Seat("3A"));
             seatRepository.save(new Seat("3B"));
             seatRepository.save(new Seat("3C"));
             seatRepository.save(new Seat("3D"));
 
-            // Ghế hạng Premium Economy - 5 hàng tiếp theo (Hàng 4-8) - 30 ghế
-            // Hàng 4
             seatRepository.save(new Seat("4A"));
             seatRepository.save(new Seat("4B"));
             seatRepository.save(new Seat("4C"));

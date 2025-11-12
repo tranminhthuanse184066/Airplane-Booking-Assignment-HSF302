@@ -36,7 +36,6 @@ public class User {
         createdAt = LocalDateTime.now();
     }
     
-    // Constructors
     public User() {
     }
     
@@ -48,7 +47,6 @@ public class User {
         this.role = role;
     }
     
-    // Getters and Setters
     public Integer getUserId() {
         return userId;
     }

@@ -23,7 +23,7 @@ public class CheckInRequest {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20)
-    private CheckInStatus status; // PENDING, APPROVED, REJECTED
+    private CheckInStatus status;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -33,7 +33,7 @@ public class CheckInRequest {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "processed_by")
-    private User processedBy; // Manager who processed the request
+    private User processedBy;
     
     @Column(name = "notes", columnDefinition = "NVARCHAR(500)")
     private String notes;
@@ -46,7 +46,6 @@ public class CheckInRequest {
         }
     }
     
-    // Constructors
     public CheckInRequest() {
     }
     
@@ -56,7 +55,6 @@ public class CheckInRequest {
         this.status = status;
     }
     
-    // Getters and Setters
     public Integer getRequestId() {
         return requestId;
     }

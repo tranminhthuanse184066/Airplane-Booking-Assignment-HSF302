@@ -62,12 +62,10 @@ public class PublicController {
         }
         
         List<Flight> flights;
-        // Nếu có tham số tìm kiếm, lọc theo điều kiện
         if (departure != null && arrival != null && date != null) {
             flights = flightService.searchFlights(departure, arrival, date);
             model.addAttribute("searchPerformed", true);
         } else {
-            // Hiển thị tất cả chuyến bay nếu không có bộ lọc
             flights = flightService.getAllFlights();
         }
         
@@ -107,31 +105,26 @@ public class PublicController {
             RedirectAttributes redirectAttributes) {
         
         try {
-            // Kiểm tra mật khẩu khớp
             if (!password.equals(confirmPassword)) {
                 redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
                 return "redirect:/register";
             }
             
-            // Kiểm tra email đã tồn tại
             if (userService.existsByEmail(email)) {
                 redirectAttributes.addFlashAttribute("error", "Email đã được sử dụng!");
                 return "redirect:/register";
             }
             
-            // Lấy role USER (mặc định cho người đăng ký)
             Role userRole = roleRepository.findByRoleName(RoleEnum.USER)
                     .orElseThrow(() -> new RuntimeException("Role USER không tồn tại trong hệ thống"));
             
-            // Tạo user mới
             User newUser = new User();
             newUser.setFullName(fullName);
             newUser.setEmail(email);
             newUser.setPhone(phone);
-            newUser.setPassword(password); // Lưu plain text như trong UserServiceImpl
+            newUser.setPassword(password);
             newUser.setRole(userRole);
             
-            // Lưu user
             userService.createUser(newUser);
             
             redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");

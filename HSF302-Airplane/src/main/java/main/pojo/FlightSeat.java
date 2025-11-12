@@ -43,7 +43,6 @@ public class FlightSeat {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
     
-    // Constructors
     public FlightSeat() {
     }
     
@@ -65,7 +64,6 @@ public class FlightSeat {
         this.price = price;
     }
     
-    // Getters and Setters
     public Long getFlightSeatId() {
         return flightSeatId;
     }

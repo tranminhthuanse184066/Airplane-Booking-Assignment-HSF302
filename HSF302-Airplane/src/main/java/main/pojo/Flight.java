@@ -46,7 +46,6 @@ public class Flight {
     @Column(name = "has_multiple_classes")
     private Boolean hasMultipleClasses = false;
     
-    // Constructors
     public Flight() {
     }
     
@@ -84,7 +83,6 @@ public class Flight {
         }
     }
 
-    // Getters and Setters
     public Integer getFlightId() {
         return flightId;
     }

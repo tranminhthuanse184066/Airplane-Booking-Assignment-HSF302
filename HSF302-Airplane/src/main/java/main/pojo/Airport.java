@@ -23,7 +23,6 @@ public class Airport {
     @Column(name = "country", length = 100, columnDefinition = "NVARCHAR(100)")
     private String country;
     
-    // Constructors
     public Airport() {
     }
     
@@ -34,7 +33,6 @@ public class Airport {
         this.country = country;
     }
     
-    // Getters and Setters
     public Integer getAirportId() {
         return airportId;
     }

@@ -36,7 +36,6 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private java.util.List<Ticket> tickets;
     
-    // Constructors
     public Order() {
     }
     
@@ -49,7 +48,6 @@ public class Order {
         this.status = status;
     }
     
-    // Getters and Setters
     public Integer getOrderId() {
         return orderId;
     }

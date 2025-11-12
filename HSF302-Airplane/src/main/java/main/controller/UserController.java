@@ -64,18 +64,15 @@ public class UserController {
         Order order = orderService.getOrderById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         
-        // Verify the order belongs to the user
         if (!order.getUser().getUserId().equals(user.getUserId())) {
             throw new RuntimeException("Unauthorized access");
         }
         
-        // Get tickets for this order
         java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(order.getOrderId());
 
-        // Get check-in request for this order (if exists)
         java.util.List<main.pojo.CheckInRequest> checkInRequests = checkInRequestRepository.findByOrderOrderId(order.getOrderId());
         if (!checkInRequests.isEmpty()) {
-            model.addAttribute("checkInRequest", checkInRequests.get(checkInRequests.size() - 1)); // Get latest request
+            model.addAttribute("checkInRequest", checkInRequests.get(checkInRequests.size() - 1));
         }
 
         if ("true".equals(paymentSuccess)) {
@@ -112,7 +109,6 @@ public class UserController {
         User user = userService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Get user's confirmed orders that haven't been checked in yet
         List<Order> orders = orderService.getOrdersByUserId(user.getUserId())
                 .stream()
                 .filter(order -> order.getStatus() == main.enumerators.OrderStatus.CONFIRMED)
@@ -141,21 +137,18 @@ public class UserController {
             Order order = orderService.getOrderById(orderId)
                     .orElseThrow(() -> new RuntimeException("Order not found"));
             
-            // Verify the order belongs to the user
             if (!order.getUser().getUserId().equals(user.getUserId())) {
                 response.put("success", false);
                 response.put("message", "Bạn không có quyền thực hiện thao tác này");
                 return response;
             }
             
-            // Check if order is paid
             if (order.getStatus() != main.enumerators.OrderStatus.PAID) {
                 response.put("success", false);
                 response.put("message", "Đơn hàng phải được thanh toán trước khi check-in");
                 return response;
             }
             
-            // Check if there's already a pending check-in request
             java.util.Optional<main.pojo.CheckInRequest> existingRequest = 
                 checkInRequestRepository.findByOrderAndStatus(order, main.enumerators.CheckInStatus.PENDING);
             
@@ -165,14 +158,12 @@ public class UserController {
                 return response;
             }
             
-            // Create check-in request
             main.pojo.CheckInRequest checkInRequest = new main.pojo.CheckInRequest();
             checkInRequest.setOrder(order);
             checkInRequest.setUser(user);
             checkInRequest.setStatus(main.enumerators.CheckInStatus.PENDING);
             checkInRequestRepository.save(checkInRequest);
             
-            // Update ONLY the order status to CHECK_IN_PENDING
             order.setStatus(main.enumerators.OrderStatus.CHECK_IN_PENDING);
             orderRepository.save(order);
             

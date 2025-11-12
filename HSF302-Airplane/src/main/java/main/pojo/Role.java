@@ -16,7 +16,6 @@ public class Role {
     @Column(name = "roleName", nullable = false, unique = true, length = 50)
     private RoleEnum roleName;
     
-    // Constructors
     public Role() {
     }
     
@@ -24,7 +23,6 @@ public class Role {
         this.roleName = roleName;
     }
     
-    // Getters and Setters
     public Integer getRoleId() {
         return roleId;
     }
