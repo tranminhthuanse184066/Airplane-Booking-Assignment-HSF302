@@ -526,13 +526,56 @@
     </div>
 
     <script th:inline="javascript">
-        // Check if check-in was requested
-        const urlParams = new URLSearchParams(window.location.search);
-        const checkInRequested = urlParams.get('checkInRequested');
-        
-        if (checkInRequested === 'true') {
-            console.log('Check-in requested - showing modal');
-            showModal('Yêu cầu check-in đã được gửi thành công!');
+        // Handle check-in form submission with AJAX
+        const checkInForm = document.getElementById('checkInForm');
+        if (checkInForm) {
+            checkInForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Ngăn form submit mặc định
+                
+                const formData = new FormData(this);
+                const orderId = formData.get('orderId');
+                
+                // Disable button to prevent double submission
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = '⏳ Đang gửi...';
+                
+                // Send AJAX request
+                fetch('/user/check-in/request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'orderId=' + orderId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        showModal(data.message);
+                        
+                        // Reload page after 2.5 seconds
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2500);
+                    } else {
+                        // Show error message
+                        showModal(data.message);
+                        
+                        // Re-enable button
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '✈️ YÊU CẦU CHECK-IN';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showModal('Có lỗi xảy ra. Vui lòng thử lại!');
+                    
+                    // Re-enable button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '✈️ YÊU CẦU CHECK-IN';
+                });
+            });
         }
 
         function showModal(message) {
@@ -542,13 +585,6 @@
             
             modalMessage.textContent = message;
             modal.style.display = 'block';
-            
-            // Auto close after 2.5 seconds and reload page
-            setTimeout(function() {
-                modal.style.display = 'none';
-                // Remove query params and reload to update status display
-                window.location.href = window.location.pathname;
-            }, 2500);
         }
 
         // Close modal when clicking outside of it
@@ -556,7 +592,6 @@
             const modal = document.getElementById('successModal');
             if (event.target == modal) {
                 modal.style.display = 'none';
-                window.location.href = window.location.pathname;
             }
         }
 

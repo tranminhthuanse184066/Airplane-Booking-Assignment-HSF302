@@ -125,44 +125,65 @@ public class UserController {
     @Autowired
     private main.repository.CheckInRequestRepository checkInRequestRepository;
 
+    @Autowired
+    private main.repository.OrderRepository orderRepository;
+
     @PostMapping("/check-in/request")
-    public String submitCheckInRequest(@RequestParam Integer orderId, Authentication authentication) {
-        String email = authentication.getName();
-        User user = userService.getUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    @ResponseBody
+    public java.util.Map<String, Object> submitCheckInRequest(@RequestParam Integer orderId, Authentication authentication) {
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
         
-        Order order = orderService.getOrderById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        
-        // Verify the order belongs to the user
-        if (!order.getUser().getUserId().equals(user.getUserId())) {
-            throw new RuntimeException("Unauthorized access");
+        try {
+            String email = authentication.getName();
+            User user = userService.getUserByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Order order = orderService.getOrderById(orderId)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+            
+            // Verify the order belongs to the user
+            if (!order.getUser().getUserId().equals(user.getUserId())) {
+                response.put("success", false);
+                response.put("message", "Bạn không có quyền thực hiện thao tác này");
+                return response;
+            }
+            
+            // Check if order is paid
+            if (order.getStatus() != main.enumerators.OrderStatus.PAID) {
+                response.put("success", false);
+                response.put("message", "Đơn hàng phải được thanh toán trước khi check-in");
+                return response;
+            }
+            
+            // Check if there's already a pending check-in request
+            java.util.Optional<main.pojo.CheckInRequest> existingRequest = 
+                checkInRequestRepository.findByOrderAndStatus(order, main.enumerators.CheckInStatus.PENDING);
+            
+            if (existingRequest.isPresent()) {
+                response.put("success", false);
+                response.put("message", "Đã có yêu cầu check-in đang chờ xử lý");
+                return response;
+            }
+            
+            // Create check-in request
+            main.pojo.CheckInRequest checkInRequest = new main.pojo.CheckInRequest();
+            checkInRequest.setOrder(order);
+            checkInRequest.setUser(user);
+            checkInRequest.setStatus(main.enumerators.CheckInStatus.PENDING);
+            checkInRequestRepository.save(checkInRequest);
+            
+            // Update ONLY the order status to CHECK_IN_PENDING
+            order.setStatus(main.enumerators.OrderStatus.CHECK_IN_PENDING);
+            orderRepository.save(order);
+            
+            response.put("success", true);
+            response.put("message", "Yêu cầu check-in đã được gửi thành công!");
+            return response;
+            
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Có lỗi xảy ra: " + e.getMessage());
+            return response;
         }
-        
-        // Check if order is paid
-        if (order.getStatus() != main.enumerators.OrderStatus.PAID) {
-            throw new RuntimeException("Order must be paid before check-in");
-        }
-        
-        // Check if there's already a pending check-in request
-        java.util.Optional<main.pojo.CheckInRequest> existingRequest = 
-            checkInRequestRepository.findByOrderAndStatus(order, main.enumerators.CheckInStatus.PENDING);
-        
-        if (existingRequest.isPresent()) {
-            return "redirect:/user/orders/" + orderId + "?error=alreadyRequested";
-        }
-        
-        // Create check-in request
-        main.pojo.CheckInRequest checkInRequest = new main.pojo.CheckInRequest();
-        checkInRequest.setOrder(order);
-        checkInRequest.setUser(user);
-        checkInRequest.setStatus(main.enumerators.CheckInStatus.PENDING);
-        checkInRequestRepository.save(checkInRequest);
-        
-        // Update order status to CHECK_IN_PENDING
-        order.setStatus(main.enumerators.OrderStatus.CHECK_IN_PENDING);
-        orderService.updateOrder(orderId, order);
-        
-        return "redirect:/user/orders/" + orderId + "?checkInRequested=true";
     }
 }
