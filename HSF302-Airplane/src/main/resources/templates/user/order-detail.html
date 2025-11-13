@@ -409,6 +409,10 @@
                         <span class="info-label">Hạng ghế:</span>
                         <span class="info-value" th:text="${ticket.seatClass}">Economy</span>
                     </div>
+                    <div class="info-row" th:if="${ticket.seatNumber != null}">
+                        <span class="info-label">Mã ghế ngồi:</span>
+                        <span class="info-value" style="font-size: 18px; font-weight: bold; color: #0066cc;" th:text="${ticket.seatNumber}">12A</span>
+                    </div>
                     <div class="info-row">
                         <span class="info-label">Giá vé:</span>
                         <span class="info-value" th:text="${#numbers.formatDecimal(ticket.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">2,500,000 VNĐ</span>

@@ -174,6 +174,8 @@ public class ManagerController {
         java.util.List<main.pojo.Ticket> tickets = ticketRepository.findByOrderOrderId(order.getOrderId());
         for (main.pojo.Ticket ticket : tickets) {
             ticket.setStatus(main.enumerators.TicketStatus.CHECKED_IN);
+            // Assign seat number based on seat class
+            ticket.setSeatNumber(generateSeatNumber(ticket.getSeatClass()));
             ticketRepository.save(ticket);
         }
         
@@ -204,5 +206,29 @@ public class ManagerController {
         orderRepository.save(order);
         
         return "redirect:/manager/check-in-requests?rejected=true";
+    }
+    
+    private String generateSeatNumber(String seatClass) {
+        java.util.Random random = new java.util.Random();
+        int row;
+        char seat;
+        
+        // Define seat letters
+        char[] seatLetters = {'A', 'B', 'C', 'D', 'E', 'F'};
+        
+        if (seatClass != null && seatClass.contains("Thương gia")) {
+            // Business class: rows 1-3
+            row = random.nextInt(3) + 1;
+        } else if (seatClass != null && seatClass.contains("Đặc biệt")) {
+            // Premium Economy: rows 4-8
+            row = random.nextInt(5) + 4;
+        } else {
+            // Economy: rows 9-30
+            row = random.nextInt(22) + 9;
+        }
+        
+        seat = seatLetters[random.nextInt(seatLetters.length)];
+        
+        return String.format("%d%c", row, seat);
     }
 }

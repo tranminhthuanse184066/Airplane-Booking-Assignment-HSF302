@@ -17,6 +17,9 @@ public class Ticket {
     @Column(name = "seat_class", length = 20)
     private String seatClass;
     
+    @Column(name = "seat_number", length = 10)
+    private String seatNumber;
+    
     @Column(name = "booking_date")
     private LocalDateTime bookingDate;
     
@@ -63,6 +66,14 @@ public class Ticket {
     
     public void setSeatClass(String seatClass) {
         this.seatClass = seatClass;
+    }
+    
+    public String getSeatNumber() {
+        return seatNumber;
+    }
+    
+    public void setSeatNumber(String seatNumber) {
+        this.seatNumber = seatNumber;
     }
     
     public LocalDateTime getBookingDate() {
